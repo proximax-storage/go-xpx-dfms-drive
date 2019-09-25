@@ -1,6 +1,7 @@
 package drive
 
 import (
+	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
@@ -17,18 +18,18 @@ type Invite struct {
 
 // ID returns Drive ID of the Invite and makes new if none.
 func (i *Invite) ID() (ID, error) {
-	if i.Drive != NilID {
+	if i.Drive != cid.Undef {
 		return i.Drive, nil
 	}
 
 	data, err := MarshalInvite(*i)
 	if err != nil {
-		return NilID, err
+		return cid.Undef, err
 	}
 
 	id, err := NewIDFromBytes(data)
 	if err != nil {
-		return NilID, err
+		return cid.Undef, err
 	}
 
 	i.Drive = id

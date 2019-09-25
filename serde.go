@@ -9,23 +9,23 @@ import (
 
 // MarshalID serializes drive.ID to bytes.
 func MarshalID(id ID) ([]byte, error) {
-	return id.CID().MarshalBinary()
+	return id.MarshalBinary()
 }
 
 // UnmarshalID deserializes Id from bytes.
 func UnmarshalID(data []byte) (ID, error) {
 	id, err := cid.Cast(data)
 	if err != nil {
-		return NilID, err
+		return cid.Undef, err
 	}
 
-	return IDFromCID(id), nil
+	return id, nil
 }
 
 // MarshalBasicContract serializes BasicContract to bytes using protobuf.
 func MarshalBasicContract(basic *BasicContract) ([]byte, error) {
 	proto := &pb.Contract{
-		Drive:    basic.drive.CID().Bytes(),
+		Drive:    basic.drive.Bytes(),
 		Owner:    []byte(basic.owner),
 		Members:  make([][]byte, len(basic.members)),
 		Duration: basic.duration,
@@ -83,13 +83,13 @@ func UnmarshalBasicContract(data []byte) (*BasicContract, error) {
 
 // MarshalInvite serializes Invite to bytes using protobuf.
 func MarshalInvite(invite Invite) ([]byte, error) {
-	return pb.Invite{
-		Drive:    invite.Drive.CID().Bytes(),
+	return (&pb.Invite{
+		Drive:    invite.Drive.Bytes(),
 		Owner:    []byte(invite.Owner),
 		Duration: invite.Duration,
 		Space:    invite.Space,
 		Created:  invite.Created,
-	}.Marshal()
+	}).Marshal()
 }
 
 // UnmarshalInvite deserializes Invite from bytes using protobuf.
