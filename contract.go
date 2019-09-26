@@ -2,6 +2,7 @@ package drive
 
 import (
 	"encoding"
+	"encoding/json"
 
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/peer"
@@ -11,6 +12,8 @@ import (
 type Contract interface {
 	encoding.BinaryMarshaler
 	encoding.BinaryUnmarshaler
+	json.Marshaler
+	json.Unmarshaler
 
 	// Drive returns identifier of Contract's Drive
 	Drive() ID

@@ -118,3 +118,13 @@ func UnmarshalInvite(data []byte) (Invite, error) {
 
 	return invite, nil
 }
+
+type basicContractJSON struct {
+	Drive    ID        `json:"drive"`
+	Owner    peer.ID   `json:"owner"`
+	Members  []peer.ID `json:"members"`
+	Duration uint64    `json:"duration"`
+	Created  uint64    `json:"created"`
+	Root     cid.Cid   `json:"root"`
+	Space    uint64    `json:"space"`
+}

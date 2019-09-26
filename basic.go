@@ -1,6 +1,8 @@
 package drive
 
 import (
+	"encoding/json"
+
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/peer"
 )
@@ -70,5 +72,35 @@ func (c *BasicContract) UnmarshalBinary(data []byte) error {
 	}
 
 	*c = *basic
+	return nil
+}
+
+func (c *BasicContract) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&basicContractJSON{
+		Drive:    c.drive,
+		Owner:    c.owner,
+		Members:  c.members,
+		Duration: c.duration,
+		Created:  c.created,
+		Root:     c.root,
+		Space:    c.space,
+	})
+}
+
+func (c *BasicContract) UnmarshalJSON(data []byte) error {
+	cjson := &basicContractJSON{}
+	err := json.Unmarshal(data, cjson)
+	if err != nil {
+		return err
+	}
+
+	c.drive = cjson.Drive
+	c.owner = cjson.Owner
+	c.members = cjson.Members
+	c.duration = cjson.Duration
+	c.created = cjson.Created
+	c.root = cjson.Root
+	c.space = cjson.Space
+
 	return nil
 }

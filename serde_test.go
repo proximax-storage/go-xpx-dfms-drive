@@ -5,15 +5,35 @@ import (
 	"testing"
 )
 
-func TestMarshalUnmarshalBasicContract(t *testing.T) {
+func TestMarshalUnmarshalBinaryBasicContract(t *testing.T) {
 	in := RandBasicContract(t)
 
-	bytes, err := MarshalBasicContract(in)
+	bytes, err := in.MarshalBinary()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	out, err := UnmarshalBasicContract(bytes)
+	out := &BasicContract{}
+	err = out.UnmarshalBinary(bytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(in, out) {
+		t.Fatal("not equal")
+	}
+}
+
+func TestMarshalUnmarshalJSONBasicContract(t *testing.T) {
+	in := RandBasicContract(t)
+
+	bytes, err := in.MarshalJSON()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	out := &BasicContract{}
+	err = out.UnmarshalJSON(bytes)
 	if err != nil {
 		t.Fatal(err)
 	}
