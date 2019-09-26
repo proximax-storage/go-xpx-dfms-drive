@@ -1,6 +1,9 @@
 package drive
 
 import (
+	"io"
+
+	"github.com/Wondertan/go-serde"
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/peer"
 
@@ -49,36 +52,37 @@ func UnmarshalBasicContract(data []byte) (*BasicContract, error) {
 		return nil, err
 	}
 
-	basic := &BasicContract{
-		duration: proto.Duration,
-		created:  proto.Created,
-		space:    proto.Space,
-		members:  make([]peer.ID, len(proto.Members)),
+	return protoToBasicContract(proto)
+}
+
+// WriteBasicContract serializes invite to the Writer
+func WriteBasicContract(w io.Writer, basic *BasicContract) error {
+	proto := &pb.Contract{
+		Drive:    basic.drive.Bytes(),
+		Owner:    []byte(basic.owner),
+		Members:  make([][]byte, len(basic.members)),
+		Duration: basic.duration,
+		Created:  basic.created,
+		Space:    basic.space,
+		Root:     basic.root.Bytes(),
 	}
 
-	basic.drive, err = UnmarshalID(proto.Drive)
+	for i, m := range basic.members {
+		proto.Members[i] = []byte(m)
+	}
+
+	return serde.WriteMessage(w, proto)
+}
+
+// ReadBasicContract deserialize invite from Reader
+func ReadBasicContract(r io.Reader) (*BasicContract, error) {
+	proto := new(pb.Contract)
+	err := serde.ReadMessage(r, proto)
 	if err != nil {
 		return nil, err
 	}
 
-	basic.root, err = cid.Cast(proto.Root)
-	if err != nil {
-		return nil, err
-	}
-
-	basic.owner, err = peer.IDFromBytes(proto.Owner)
-	if err != nil {
-		return nil, err
-	}
-
-	for i, m := range proto.Members {
-		basic.members[i], err = peer.IDFromBytes(m)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return basic, nil
+	return protoToBasicContract(proto)
 }
 
 // MarshalInvite serializes Invite to bytes using protobuf.
@@ -100,7 +104,66 @@ func UnmarshalInvite(data []byte) (Invite, error) {
 		return NilInvite, err
 	}
 
-	invite := Invite{
+	return protoToInvite(proto)
+}
+
+// WriteInvite serializes invite to the Writer
+func WriteInvite(w io.Writer, invite Invite) error {
+	return serde.WriteMessage(w, &pb.Invite{
+		Drive:    invite.Drive.Bytes(),
+		Owner:    []byte(invite.Owner),
+		Duration: invite.Duration,
+		Space:    invite.Space,
+		Created:  invite.Created,
+	})
+}
+
+// ReadInvite deserialize invite from Reader
+func ReadInvite(r io.Reader) (Invite, error) {
+	proto := new(pb.Invite)
+	err := serde.ReadMessage(r, proto)
+	if err != nil {
+		return NilInvite, err
+	}
+
+	return protoToInvite(proto)
+}
+
+func protoToBasicContract(proto *pb.Contract) (basic *BasicContract, err error) {
+	basic = &BasicContract{
+		duration: proto.Duration,
+		created:  proto.Created,
+		space:    proto.Space,
+		members:  make([]peer.ID, len(proto.Members)),
+	}
+
+	basic.drive, err = UnmarshalID(proto.Drive)
+	if err != nil {
+		return
+	}
+
+	basic.root, err = cid.Cast(proto.Root)
+	if err != nil {
+		return
+	}
+
+	basic.owner, err = peer.IDFromBytes(proto.Owner)
+	if err != nil {
+		return
+	}
+
+	for i, m := range proto.Members {
+		basic.members[i], err = peer.IDFromBytes(m)
+		if err != nil {
+			return
+		}
+	}
+
+	return
+}
+
+func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
+	invite = Invite{
 		Created:  proto.Created,
 		Duration: proto.Duration,
 		Space:    proto.Space,
@@ -116,7 +179,7 @@ func UnmarshalInvite(data []byte) (Invite, error) {
 		return NilInvite, err
 	}
 
-	return invite, nil
+	return
 }
 
 type basicContractJSON struct {
