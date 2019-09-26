@@ -18,6 +18,16 @@ func init() {
 // ID represents identifier of the drive
 type ID = cid.Cid
 
+// NewIDFromInvite returns new ID generated from Invite
+func NewIDFromInvite(invite Invite) (ID, error) {
+	data, err := MarshalInvite(invite)
+	if err != nil {
+		return cid.Undef, err
+	}
+
+	return NewIDFromBytes(data)
+}
+
 // NewIDFromBytes creates new ID by hashing given Data
 func NewIDFromBytes(data []byte) (ID, error) {
 	hash, err := multihash.Sum(data, multihash.SHA2_256, -1)
