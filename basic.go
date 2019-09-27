@@ -7,6 +7,9 @@ import (
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
+// emptyRoot cid is taken from unixfs empty node, but it is hardcoded not to add additional dependency
+var emptyRoot, _ = cid.Decode("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn")
+
 type BasicContract struct {
 	drive    ID
 	owner    peer.ID
@@ -24,7 +27,7 @@ func NewBasicContractFromInvite(invite Invite, members []peer.ID) *BasicContract
 		members:  members,
 		duration: invite.Duration,
 		created:  invite.Created,
-		root:     cid.Undef,
+		root:     emptyRoot,
 		space:    invite.Space,
 	}
 }
