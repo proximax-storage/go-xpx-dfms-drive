@@ -1,0 +1,21 @@
+syntax = "proto3";
+package drive_pb;
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+message Contract {
+    bytes drive = 1;
+    bytes owner = 2;
+    repeated bytes members = 3;
+    uint64 duration = 4;
+    uint64 created = 5;
+    uint64 space = 6;
+    bytes root = 7;
+}
+
+message Invite {
+    bytes drive = 1;
+    bytes owner = 2;
+    uint64 duration = 3;
+    uint64 space = 4;
+    uint64 created = 5;
+}
