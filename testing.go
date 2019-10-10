@@ -1,20 +1,29 @@
 package drive
 
 import (
+	"crypto/rand"
+	"io"
+	"io/ioutil"
 	"testing"
 
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/libp2p/go-libp2p-core/test"
+	"github.com/multiformats/go-multihash"
 )
 
 func RandID(t *testing.T) ID {
-	id, err := cid.Decode("f015512209d8453505bdc6f269678e16b3e56c2a2948a41f2c792617cc9611ed363c95b63")
+	b, err := ioutil.ReadAll(io.LimitReader(rand.Reader, 256))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	return id
+	hash, err := multihash.Sum(b, multihash.SHA2_256, -1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return cid.NewCidV1(cid.Raw, hash)
 }
 
 func RandInvite(t *testing.T) Invite {
