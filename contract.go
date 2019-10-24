@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/ipfs/go-cid"
+	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
@@ -42,4 +43,7 @@ type Contract interface {
 	// TotalSpace specifies total physical space used by Drive
 	// on member nodes.
 	TotalSpace() uint64
+
+	// ContractID specifies public key for owner of drive
+	ContractID() crypto.PubKey
 }

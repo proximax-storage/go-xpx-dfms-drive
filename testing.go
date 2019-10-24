@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/ipfs/go-cid"
+	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/libp2p/go-libp2p-core/test"
 	"github.com/multiformats/go-multihash"
@@ -37,7 +38,12 @@ func RandInvite(t *testing.T) Invite {
 }
 
 func RandBasicContract(t *testing.T) *BasicContract {
+
 	id := RandID(t)
+	_, pubKey, err := crypto.GenerateKeyPair(crypto.Ed25519, 1024)
+	if err != nil {
+		t.Fatal(err)
+	}
 	return &BasicContract{
 		drive: id,
 		root:  id,
@@ -46,8 +52,9 @@ func RandBasicContract(t *testing.T) *BasicContract {
 			test.RandPeerIDFatal(t),
 			test.RandPeerIDFatal(t),
 		},
-		duration: 100,
-		created:  100,
-		space:    100,
+		duration:   100,
+		created:    100,
+		space:      100,
+		contractId: pubKey,
 	}
 }
