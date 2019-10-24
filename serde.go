@@ -5,6 +5,7 @@ import (
 
 	"github.com/Wondertan/go-serde"
 	"github.com/ipfs/go-cid"
+	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 
 	pb "github.com/proximax-storage/go-xpx-dfms-drive/pb"
@@ -27,14 +28,20 @@ func UnmarshalID(data []byte) (ID, error) {
 
 // MarshalBasicContract serializes BasicContract to bytes using protobuf.
 func MarshalBasicContract(basic *BasicContract) ([]byte, error) {
+	ctr, err := basic.contractId.Bytes()
+	if err != nil {
+		return nil, err
+	}
+
 	proto := &pb.Contract{
-		Drive:    basic.drive.Bytes(),
-		Owner:    []byte(basic.owner),
-		Members:  make([][]byte, len(basic.members)),
-		Duration: basic.duration,
-		Created:  basic.created,
-		Space:    basic.space,
-		Root:     basic.root.Bytes(),
+		Drive:      basic.drive.Bytes(),
+		Owner:      []byte(basic.owner),
+		Members:    make([][]byte, len(basic.members)),
+		Duration:   basic.duration,
+		Created:    basic.created,
+		Space:      basic.space,
+		Root:       basic.root.Bytes(),
+		ContractId: ctr,
 	}
 
 	for i, m := range basic.members {
@@ -57,14 +64,19 @@ func UnmarshalBasicContract(data []byte) (*BasicContract, error) {
 
 // WriteBasicContract serializes invite to the Writer
 func WriteBasicContract(w io.Writer, basic *BasicContract) error {
+	ctr, err := basic.contractId.Bytes()
+	if err != nil {
+		return err
+	}
 	proto := &pb.Contract{
-		Drive:    basic.drive.Bytes(),
-		Owner:    []byte(basic.owner),
-		Members:  make([][]byte, len(basic.members)),
-		Duration: basic.duration,
-		Created:  basic.created,
-		Space:    basic.space,
-		Root:     basic.root.Bytes(),
+		Drive:      basic.drive.Bytes(),
+		Owner:      []byte(basic.owner),
+		Members:    make([][]byte, len(basic.members)),
+		Duration:   basic.duration,
+		Created:    basic.created,
+		Space:      basic.space,
+		Root:       basic.root.Bytes(),
+		ContractId: ctr,
 	}
 
 	for i, m := range basic.members {
@@ -152,13 +164,17 @@ func protoToBasicContract(proto *pb.Contract) (basic *BasicContract, err error) 
 		return
 	}
 
+	basic.contractId, err = crypto.UnmarshalPublicKey(proto.ContractId)
+	if err != nil {
+		return
+	}
+
 	for i, m := range proto.Members {
 		basic.members[i], err = peer.IDFromBytes(m)
 		if err != nil {
 			return
 		}
 	}
-
 	return
 }
 
@@ -183,11 +199,12 @@ func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 }
 
 type basicContractJSON struct {
-	Drive    ID        `json:"drive"`
-	Owner    peer.ID   `json:"owner"`
-	Members  []peer.ID `json:"members"`
-	Duration uint64    `json:"duration"`
-	Created  uint64    `json:"created"`
-	Root     cid.Cid   `json:"root"`
-	Space    uint64    `json:"space"`
+	Drive      ID        `json:"drive"`
+	Owner      peer.ID   `json:"owner"`
+	Members    []peer.ID `json:"members"`
+	Duration   uint64    `json:"duration"`
+	Created    uint64    `json:"created"`
+	Root       cid.Cid   `json:"root"`
+	Space      uint64    `json:"space"`
+	ContractId []byte    `json:"contractId"`
 }

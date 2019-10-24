@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 
 	"github.com/ipfs/go-cid"
+	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
+// TODO Currently Contract has two ids two support Blockchain and non-Blockchain DFMS versions. Merge them into one
 // Contract is an agreement between client and replicator peers on some amount of disk space
 type Contract interface {
 	encoding.BinaryMarshaler
@@ -42,4 +44,7 @@ type Contract interface {
 	// TotalSpace specifies total physical space used by Drive
 	// on member nodes.
 	TotalSpace() uint64
+
+	// ContractID specifies public key for owner of drive
+	ContractID() crypto.PubKey
 }

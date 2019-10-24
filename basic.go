@@ -4,28 +4,31 @@ import (
 	"encoding/json"
 
 	"github.com/ipfs/go-cid"
+	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
 type BasicContract struct {
-	drive    ID
-	owner    peer.ID
-	members  []peer.ID
-	duration uint64
-	created  uint64
-	root     cid.Cid
-	space    uint64
+	drive      ID
+	owner      peer.ID
+	members    []peer.ID
+	duration   uint64
+	created    uint64
+	root       cid.Cid
+	space      uint64
+	contractId crypto.PubKey
 }
 
-func NewBasicContractFromInvite(invite Invite, members []peer.ID, root cid.Cid) *BasicContract {
+func NewBasicContractFromInvite(invite Invite, members []peer.ID, root cid.Cid, contractId crypto.PubKey) *BasicContract {
 	return &BasicContract{
-		drive:    invite.Drive,
-		owner:    invite.Owner,
-		members:  members,
-		duration: invite.Duration,
-		created:  invite.Created,
-		root:     root,
-		space:    invite.Space,
+		drive:      invite.Drive,
+		owner:      invite.Owner,
+		members:    members,
+		duration:   invite.Duration,
+		created:    invite.Created,
+		root:       root,
+		space:      invite.Space,
+		contractId: contractId,
 	}
 }
 
@@ -39,6 +42,10 @@ func (c *BasicContract) Drive() ID {
 
 func (c *BasicContract) Owner() peer.ID {
 	return c.owner
+}
+
+func (c *BasicContract) ContractID() crypto.PubKey {
+	return c.contractId
 }
 
 func (c *BasicContract) Members() []peer.ID {
@@ -76,14 +83,20 @@ func (c *BasicContract) UnmarshalBinary(data []byte) error {
 }
 
 func (c *BasicContract) MarshalJSON() ([]byte, error) {
+	contractId, err := c.contractId.Bytes()
+	if err != nil {
+		return nil, err
+	}
+
 	return json.Marshal(&basicContractJSON{
-		Drive:    c.drive,
-		Owner:    c.owner,
-		Members:  c.members,
-		Duration: c.duration,
-		Created:  c.created,
-		Root:     c.root,
-		Space:    c.space,
+		Drive:      c.drive,
+		Owner:      c.owner,
+		Members:    c.members,
+		Duration:   c.duration,
+		Created:    c.created,
+		Root:       c.root,
+		Space:      c.space,
+		ContractId: contractId,
 	})
 }
 
@@ -94,6 +107,10 @@ func (c *BasicContract) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
+	contractId, err := crypto.UnmarshalPublicKey(cjson.ContractId)
+	if err != nil {
+		return err
+	}
 	c.drive = cjson.Drive
 	c.owner = cjson.Owner
 	c.members = cjson.Members
@@ -101,6 +118,7 @@ func (c *BasicContract) UnmarshalJSON(data []byte) error {
 	c.created = cjson.Created
 	c.root = cjson.Root
 	c.space = cjson.Space
+	c.contractId = contractId
 
 	return nil
 }

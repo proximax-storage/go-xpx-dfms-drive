@@ -10,6 +10,7 @@ message Contract {
     uint64 created = 5;
     uint64 space = 6;
     bytes root = 7;
+    bytes contractId = 8;
 }
 
 message Invite {
