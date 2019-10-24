@@ -9,6 +9,7 @@ import (
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
+// TODO Currently Contract has two ids two support Blockchain and non-Blockchain DFMS versions. Merge them into one
 // Contract is an agreement between client and replicator peers on some amount of disk space
 type Contract interface {
 	encoding.BinaryMarshaler
