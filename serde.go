@@ -199,12 +199,12 @@ func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 }
 
 type basicContractJSON struct {
-	Drive      ID            `json:"drive"`
-	Owner      peer.ID       `json:"owner"`
-	Members    []peer.ID     `json:"members"`
-	Duration   uint64        `json:"duration"`
-	Created    uint64        `json:"created"`
-	Root       cid.Cid       `json:"root"`
-	Space      uint64        `json:"space"`
-	ContractId crypto.PubKey `json:"contractId"`
+	Drive      ID        `json:"drive"`
+	Owner      peer.ID   `json:"owner"`
+	Members    []peer.ID `json:"members"`
+	Duration   uint64    `json:"duration"`
+	Created    uint64    `json:"created"`
+	Root       cid.Cid   `json:"root"`
+	Space      uint64    `json:"space"`
+	ContractId []byte    `json:"contractId"`
 }
