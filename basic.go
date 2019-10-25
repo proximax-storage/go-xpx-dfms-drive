@@ -89,6 +89,18 @@ func (c *BasicContract) TotalSpace() uint64 {
 	return c.space
 }
 
+func (c *BasicContract) Replicas() int8 {
+	return c.replicasDelta
+}
+
+func (c *BasicContract) MinReplicatorsDelta() int8 {
+	return c.minReplicatorsDelta
+}
+
+func (c *BasicContract) MinApproversDelta() int8 {
+	return c.minApproversDelta
+}
+
 func (c *BasicContract) MarshalBinary() ([]byte, error) {
 	return MarshalBasicContract(c)
 }
