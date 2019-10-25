@@ -48,6 +48,8 @@ type Contract interface {
 	// PrivateKey specifies private key for signing
 	PrivateKey() crypto.PrivKey
 
+	ContractID() crypto.PubKey
+
 	Replicas() int8
 
 	MinReplicatorsDelta() int8
