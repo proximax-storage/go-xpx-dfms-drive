@@ -9,26 +9,43 @@ import (
 )
 
 type BasicContract struct {
-	drive      ID
-	owner      peer.ID
-	members    []peer.ID
-	duration   uint64
-	created    uint64
-	root       cid.Cid
-	space      uint64
-	contractId crypto.PubKey
+	drive               ID
+	owner               peer.ID
+	members             []peer.ID
+	duration            uint64
+	created             uint64
+	root                cid.Cid
+	space               uint64
+	contractId          crypto.PubKey
+	privateKey          crypto.PrivKey
+	replicasDelta       int8
+	minReplicatorsDelta int8
+	minApproversDelta   int8
 }
 
-func NewBasicContractFromInvite(invite Invite, members []peer.ID, root cid.Cid, contractId crypto.PubKey) *BasicContract {
+func NewBasicContractFromInvite(
+	invite Invite,
+	members []peer.ID,
+	root cid.Cid,
+	contractId crypto.PubKey,
+	privateKey crypto.PrivKey,
+	replicasDelta,
+	minReplicatorsDelta,
+	minApproversDelta int8,
+) *BasicContract {
 	return &BasicContract{
-		drive:      invite.Drive,
-		owner:      invite.Owner,
-		members:    members,
-		duration:   invite.Duration,
-		created:    invite.Created,
-		root:       root,
-		space:      invite.Space,
-		contractId: contractId,
+		drive:               invite.Drive,
+		owner:               invite.Owner,
+		members:             members,
+		duration:            invite.Duration,
+		created:             invite.Created,
+		root:                root,
+		space:               invite.Space,
+		privateKey:          privateKey,
+		contractId:          privateKey.GetPublic(),
+		replicasDelta:       replicasDelta,
+		minReplicatorsDelta: minReplicatorsDelta,
+		minApproversDelta:   minApproversDelta,
 	}
 }
 
@@ -46,6 +63,10 @@ func (c *BasicContract) Owner() peer.ID {
 
 func (c *BasicContract) ContractID() crypto.PubKey {
 	return c.contractId
+}
+
+func (c *BasicContract) PrivateKey() crypto.PrivKey {
+	return c.privateKey
 }
 
 func (c *BasicContract) Members() []peer.ID {
@@ -83,20 +104,15 @@ func (c *BasicContract) UnmarshalBinary(data []byte) error {
 }
 
 func (c *BasicContract) MarshalJSON() ([]byte, error) {
-	contractId, err := c.contractId.Bytes()
-	if err != nil {
-		return nil, err
-	}
 
 	return json.Marshal(&basicContractJSON{
-		Drive:      c.drive,
-		Owner:      c.owner,
-		Members:    c.members,
-		Duration:   c.duration,
-		Created:    c.created,
-		Root:       c.root,
-		Space:      c.space,
-		ContractId: contractId,
+		Drive:    c.drive,
+		Owner:    c.owner,
+		Members:  c.members,
+		Duration: c.duration,
+		Created:  c.created,
+		Root:     c.root,
+		Space:    c.space,
 	})
 }
 
@@ -118,6 +134,7 @@ func (c *BasicContract) UnmarshalJSON(data []byte) error {
 	c.created = cjson.Created
 	c.root = cjson.Root
 	c.space = cjson.Space
+	c.replicasDelta = cjson.Replicas
 	c.contractId = contractId
 
 	return nil

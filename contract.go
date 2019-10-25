@@ -45,6 +45,12 @@ type Contract interface {
 	// on member nodes.
 	TotalSpace() uint64
 
-	// ContractID specifies public key for owner of drive
-	ContractID() crypto.PubKey
+	// PrivateKey specifies private key for signing
+	PrivateKey() crypto.PrivKey
+
+	Replicas() int8
+
+	MinReplicatorsDelta() int8
+
+	MinApproversDelta() int8
 }

@@ -11,6 +11,9 @@ message Contract {
     uint64 space = 6;
     bytes root = 7;
     bytes contractId = 8;
+    int32 replicasDelta = 9;
+    int32 minReplicatorsDelta = 10;
+    int32 minApproversDelta = 11;
 }
 
 message Invite {

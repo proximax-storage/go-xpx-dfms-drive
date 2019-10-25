@@ -28,20 +28,23 @@ func UnmarshalID(data []byte) (ID, error) {
 
 // MarshalBasicContract serializes BasicContract to bytes using protobuf.
 func MarshalBasicContract(basic *BasicContract) ([]byte, error) {
-	ctr, err := basic.contractId.Bytes()
+	ctr, err := basic.privateKey.GetPublic().Bytes()
 	if err != nil {
 		return nil, err
 	}
 
 	proto := &pb.Contract{
-		Drive:      basic.drive.Bytes(),
-		Owner:      []byte(basic.owner),
-		Members:    make([][]byte, len(basic.members)),
-		Duration:   basic.duration,
-		Created:    basic.created,
-		Space:      basic.space,
-		Root:       basic.root.Bytes(),
-		ContractId: ctr,
+		Drive:               basic.drive.Bytes(),
+		Owner:               []byte(basic.owner),
+		Members:             make([][]byte, len(basic.members)),
+		Duration:            basic.duration,
+		Created:             basic.created,
+		Space:               basic.space,
+		ReplicasDelta:       int32(basic.replicasDelta),
+		MinReplicatorsDelta: int32(basic.minReplicatorsDelta),
+		MinApproversDelta:   int32(basic.minApproversDelta),
+		Root:                basic.root.Bytes(),
+		ContractId:          ctr,
 	}
 
 	for i, m := range basic.members {
@@ -64,19 +67,22 @@ func UnmarshalBasicContract(data []byte) (*BasicContract, error) {
 
 // WriteBasicContract serializes invite to the Writer
 func WriteBasicContract(w io.Writer, basic *BasicContract) error {
-	ctr, err := basic.contractId.Bytes()
+	ctr, err := basic.privateKey.GetPublic().Bytes()
 	if err != nil {
 		return err
 	}
 	proto := &pb.Contract{
-		Drive:      basic.drive.Bytes(),
-		Owner:      []byte(basic.owner),
-		Members:    make([][]byte, len(basic.members)),
-		Duration:   basic.duration,
-		Created:    basic.created,
-		Space:      basic.space,
-		Root:       basic.root.Bytes(),
-		ContractId: ctr,
+		Drive:               basic.drive.Bytes(),
+		Owner:               []byte(basic.owner),
+		Members:             make([][]byte, len(basic.members)),
+		Duration:            basic.duration,
+		Created:             basic.created,
+		Space:               basic.space,
+		ReplicasDelta:       int32(basic.replicasDelta),
+		MinReplicatorsDelta: int32(basic.minReplicatorsDelta),
+		MinApproversDelta:   int32(basic.minApproversDelta),
+		Root:                basic.root.Bytes(),
+		ContractId:          ctr,
 	}
 
 	for i, m := range basic.members {
@@ -143,10 +149,13 @@ func ReadInvite(r io.Reader) (Invite, error) {
 
 func protoToBasicContract(proto *pb.Contract) (basic *BasicContract, err error) {
 	basic = &BasicContract{
-		duration: proto.Duration,
-		created:  proto.Created,
-		space:    proto.Space,
-		members:  make([]peer.ID, len(proto.Members)),
+		duration:            proto.Duration,
+		created:             proto.Created,
+		space:               proto.Space,
+		replicasDelta:       int8(proto.ReplicasDelta),
+		minApproversDelta:   int8(proto.MinApproversDelta),
+		minReplicatorsDelta: int8(proto.MinReplicatorsDelta),
+		members:             make([]peer.ID, len(proto.Members)),
 	}
 
 	basic.drive, err = UnmarshalID(proto.Drive)
@@ -199,12 +208,15 @@ func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 }
 
 type basicContractJSON struct {
-	Drive      ID        `json:"drive"`
-	Owner      peer.ID   `json:"owner"`
-	Members    []peer.ID `json:"members"`
-	Duration   uint64    `json:"duration"`
-	Created    uint64    `json:"created"`
-	Root       cid.Cid   `json:"root"`
-	Space      uint64    `json:"space"`
-	ContractId []byte    `json:"contractId"`
+	Drive               ID        `json:"drive"`
+	Owner               peer.ID   `json:"owner"`
+	Members             []peer.ID `json:"members"`
+	Duration            uint64    `json:"duration"`
+	Created             uint64    `json:"created"`
+	Root                cid.Cid   `json:"root"`
+	Space               uint64    `json:"space"`
+	ContractId          []byte    `json:"contractId"`
+	Replicas            int8      `json:"replicas"`
+	MinReplicatorsDelta int8      `json:"minReplicatorsDelta"`
+	MinApproversDelta   int8      `json:"minApproversDelta"`
 }
