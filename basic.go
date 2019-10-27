@@ -42,7 +42,7 @@ func NewBasicContractFromInvite(
 		root:                root,
 		space:               invite.Space,
 		privateKey:          privateKey,
-		contractId:          privateKey.GetPublic(),
+		contractId:          contractId,
 		replicasDelta:       replicasDelta,
 		minReplicatorsDelta: minReplicatorsDelta,
 		minApproversDelta:   minApproversDelta,
