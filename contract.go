@@ -24,7 +24,7 @@ type Contract interface {
 	Owner() peer.ID
 
 	// Members are peers responsible for Drive
-	Members() []peer.ID
+	// Members() []peer.ID
 
 	// Duration of the contract.
 	// NOTE: May return time in milliseconds or amount of blocks,

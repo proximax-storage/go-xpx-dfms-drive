@@ -70,6 +70,18 @@ func (c *LedgerContract) TotalSpace() uint64 {
 	return c.space
 }
 
+func (c *LedgerContract) Replicas() int8 {
+	return c.replicasDelta
+}
+
+func (c *LedgerContract) MinReplicatorsDelta() int8 {
+	return c.minReplicatorsDelta
+}
+
+func (c *LedgerContract) MinApproversDelta() int8 {
+	return c.minApproversDelta
+}
+
 func (c *LedgerContract) MarshalBinary() ([]byte, error) {
 	return MarshalLedgerContract(c)
 }
