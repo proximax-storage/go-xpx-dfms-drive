@@ -27,14 +27,16 @@ type Contract struct {
 	Drive                []byte   `protobuf:"bytes,1,opt,name=drive,proto3" json:"drive,omitempty"`
 	Owner                []byte   `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
 	Members              [][]byte `protobuf:"bytes,3,rep,name=members,proto3" json:"members,omitempty"`
-	Duration             uint64   `protobuf:"varint,4,opt,name=duration,proto3" json:"duration,omitempty"`
-	Created              uint64   `protobuf:"varint,5,opt,name=created,proto3" json:"created,omitempty"`
-	Space                uint64   `protobuf:"varint,6,opt,name=space,proto3" json:"space,omitempty"`
+	Duration             int64    `protobuf:"varint,4,opt,name=duration,proto3" json:"duration,omitempty"`
+	Created              int64    `protobuf:"varint,5,opt,name=created,proto3" json:"created,omitempty"`
+	Space                int64    `protobuf:"varint,6,opt,name=space,proto3" json:"space,omitempty"`
 	Root                 []byte   `protobuf:"bytes,7,opt,name=root,proto3" json:"root,omitempty"`
 	ContractId           []byte   `protobuf:"bytes,8,opt,name=contractId,proto3" json:"contractId,omitempty"`
-	ReplicasDelta        int32    `protobuf:"varint,9,opt,name=replicasDelta,proto3" json:"replicasDelta,omitempty"`
-	MinReplicatorsDelta  int32    `protobuf:"varint,10,opt,name=minReplicatorsDelta,proto3" json:"minReplicatorsDelta,omitempty"`
-	MinApproversDelta    int32    `protobuf:"varint,11,opt,name=minApproversDelta,proto3" json:"minApproversDelta,omitempty"`
+	Replicas             uint32   `protobuf:"varint,9,opt,name=replicas,proto3" json:"replicas,omitempty"`
+	MinReplicators       uint32   `protobuf:"varint,10,opt,name=minReplicators,proto3" json:"minReplicators,omitempty"`
+	PercentApprovers     uint32   `protobuf:"varint,11,opt,name=percentApprovers,proto3" json:"percentApprovers,omitempty"`
+	BillingPrice         int64    `protobuf:"varint,12,opt,name=billingPrice,proto3" json:"billingPrice,omitempty"`
+	BillingPeriod        int64    `protobuf:"varint,13,opt,name=billingPeriod,proto3" json:"billingPeriod,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -94,21 +96,21 @@ func (m *Contract) GetMembers() [][]byte {
 	return nil
 }
 
-func (m *Contract) GetDuration() uint64 {
+func (m *Contract) GetDuration() int64 {
 	if m != nil {
 		return m.Duration
 	}
 	return 0
 }
 
-func (m *Contract) GetCreated() uint64 {
+func (m *Contract) GetCreated() int64 {
 	if m != nil {
 		return m.Created
 	}
 	return 0
 }
 
-func (m *Contract) GetSpace() uint64 {
+func (m *Contract) GetSpace() int64 {
 	if m != nil {
 		return m.Space
 	}
@@ -129,23 +131,37 @@ func (m *Contract) GetContractId() []byte {
 	return nil
 }
 
-func (m *Contract) GetReplicasDelta() int32 {
+func (m *Contract) GetReplicas() uint32 {
 	if m != nil {
-		return m.ReplicasDelta
+		return m.Replicas
 	}
 	return 0
 }
 
-func (m *Contract) GetMinReplicatorsDelta() int32 {
+func (m *Contract) GetMinReplicators() uint32 {
 	if m != nil {
-		return m.MinReplicatorsDelta
+		return m.MinReplicators
 	}
 	return 0
 }
 
-func (m *Contract) GetMinApproversDelta() int32 {
+func (m *Contract) GetPercentApprovers() uint32 {
 	if m != nil {
-		return m.MinApproversDelta
+		return m.PercentApprovers
+	}
+	return 0
+}
+
+func (m *Contract) GetBillingPrice() int64 {
+	if m != nil {
+		return m.BillingPrice
+	}
+	return 0
+}
+
+func (m *Contract) GetBillingPeriod() int64 {
+	if m != nil {
+		return m.BillingPeriod
 	}
 	return 0
 }
@@ -153,12 +169,12 @@ func (m *Contract) GetMinApproversDelta() int32 {
 type Invite struct {
 	Drive                []byte   `protobuf:"bytes,1,opt,name=drive,proto3" json:"drive,omitempty"`
 	Owner                []byte   `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
-	Duration             uint64   `protobuf:"varint,3,opt,name=duration,proto3" json:"duration,omitempty"`
-	Space                uint64   `protobuf:"varint,4,opt,name=space,proto3" json:"space,omitempty"`
-	Created              uint64   `protobuf:"varint,5,opt,name=created,proto3" json:"created,omitempty"`
-	ReplicasDelta        int32    `protobuf:"varint,6,opt,name=replicasDelta,proto3" json:"replicasDelta,omitempty"`
-	MinReplicatorsDelta  int32    `protobuf:"varint,7,opt,name=minReplicatorsDelta,proto3" json:"minReplicatorsDelta,omitempty"`
-	MinApproversDelta    int32    `protobuf:"varint,8,opt,name=minApproversDelta,proto3" json:"minApproversDelta,omitempty"`
+	Duration             int64    `protobuf:"varint,3,opt,name=duration,proto3" json:"duration,omitempty"`
+	Space                int64    `protobuf:"varint,4,opt,name=space,proto3" json:"space,omitempty"`
+	Created              int64    `protobuf:"varint,5,opt,name=created,proto3" json:"created,omitempty"`
+	Replicas             uint32   `protobuf:"varint,6,opt,name=replicas,proto3" json:"replicas,omitempty"`
+	MinReplicators       uint32   `protobuf:"varint,7,opt,name=minReplicators,proto3" json:"minReplicators,omitempty"`
+	PercentApprovers     uint32   `protobuf:"varint,8,opt,name=percentApprovers,proto3" json:"percentApprovers,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -211,44 +227,44 @@ func (m *Invite) GetOwner() []byte {
 	return nil
 }
 
-func (m *Invite) GetDuration() uint64 {
+func (m *Invite) GetDuration() int64 {
 	if m != nil {
 		return m.Duration
 	}
 	return 0
 }
 
-func (m *Invite) GetSpace() uint64 {
+func (m *Invite) GetSpace() int64 {
 	if m != nil {
 		return m.Space
 	}
 	return 0
 }
 
-func (m *Invite) GetCreated() uint64 {
+func (m *Invite) GetCreated() int64 {
 	if m != nil {
 		return m.Created
 	}
 	return 0
 }
 
-func (m *Invite) GetReplicasDelta() int32 {
+func (m *Invite) GetReplicas() uint32 {
 	if m != nil {
-		return m.ReplicasDelta
+		return m.Replicas
 	}
 	return 0
 }
 
-func (m *Invite) GetMinReplicatorsDelta() int32 {
+func (m *Invite) GetMinReplicators() uint32 {
 	if m != nil {
-		return m.MinReplicatorsDelta
+		return m.MinReplicators
 	}
 	return 0
 }
 
-func (m *Invite) GetMinApproversDelta() int32 {
+func (m *Invite) GetPercentApprovers() uint32 {
 	if m != nil {
-		return m.MinApproversDelta
+		return m.PercentApprovers
 	}
 	return 0
 }
@@ -261,28 +277,30 @@ func init() {
 func init() { proto.RegisterFile("drive.proto", fileDescriptor_acb65799e804e3dc) }
 
 var fileDescriptor_acb65799e804e3dc = []byte{
-	// 332 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x92, 0xcd, 0x4e, 0xf2, 0x40,
-	0x14, 0x86, 0xbf, 0x81, 0x52, 0xfa, 0x1d, 0x30, 0xd1, 0xd1, 0xc5, 0x84, 0x45, 0xd3, 0x10, 0x17,
-	0x5d, 0x28, 0x98, 0x78, 0x05, 0xfe, 0x6c, 0xd8, 0xf6, 0x06, 0x4c, 0x3b, 0x1d, 0x71, 0x12, 0x3a,
-	0x67, 0x32, 0x0c, 0x78, 0x07, 0x5e, 0x83, 0x97, 0xe4, 0xd2, 0x95, 0x6b, 0x83, 0x37, 0x62, 0x38,
-	0x05, 0x82, 0x22, 0x0b, 0x76, 0xf3, 0xbc, 0xe7, 0x9d, 0x9e, 0xe6, 0xc9, 0x40, 0xa7, 0x74, 0x7a,
-	0xae, 0x06, 0xd6, 0xa1, 0x47, 0x1e, 0x11, 0x3c, 0xd8, 0xa2, 0x77, 0x39, 0xd6, 0xfe, 0x69, 0x56,
-	0x0c, 0x24, 0x56, 0xc3, 0x31, 0x8e, 0x71, 0x48, 0x85, 0x62, 0xf6, 0x48, 0x44, 0x40, 0xa7, 0xfa,
-	0x62, 0xff, 0xa3, 0x01, 0xd1, 0x1d, 0x1a, 0xef, 0x72, 0xe9, 0xf9, 0x19, 0xb4, 0xe8, 0x3b, 0x82,
-	0x25, 0x2c, 0xed, 0x66, 0x35, 0x2c, 0x53, 0x7c, 0x36, 0xca, 0x89, 0x46, 0x9d, 0x12, 0x70, 0x01,
-	0xed, 0x4a, 0x55, 0x85, 0x72, 0x53, 0xd1, 0x4c, 0x9a, 0x69, 0x37, 0x5b, 0x23, 0xef, 0x41, 0x54,
-	0xce, 0x5c, 0xee, 0x35, 0x1a, 0x11, 0x24, 0x2c, 0x0d, 0xb2, 0x0d, 0x2f, 0x6f, 0x49, 0xa7, 0x72,
-	0xaf, 0x4a, 0xd1, 0xa2, 0xd1, 0x1a, 0x97, 0x5b, 0xa6, 0x36, 0x97, 0x4a, 0x84, 0x94, 0xd7, 0xc0,
-	0x39, 0x04, 0x0e, 0xd1, 0x8b, 0x36, 0xad, 0xa6, 0x33, 0x8f, 0x01, 0xe4, 0xea, 0x8f, 0x47, 0xa5,
-	0x88, 0x68, 0xb2, 0x95, 0xf0, 0x73, 0x38, 0x72, 0xca, 0x4e, 0xb4, 0xcc, 0xa7, 0xf7, 0x6a, 0xe2,
-	0x73, 0xf1, 0x3f, 0x61, 0x69, 0x2b, 0xfb, 0x19, 0xf2, 0x2b, 0x38, 0xad, 0xb4, 0xc9, 0xea, 0xcc,
-	0xa3, 0x5b, 0x75, 0x81, 0xba, 0x7f, 0x8d, 0xf8, 0x05, 0x9c, 0x54, 0xda, 0xdc, 0x58, 0xeb, 0x70,
-	0xae, 0xd6, 0xfd, 0x0e, 0xf5, 0x77, 0x07, 0xfd, 0x97, 0x06, 0x84, 0x23, 0x33, 0xd7, 0x5e, 0x1d,
-	0xa4, 0x75, 0x5b, 0x5e, 0xf3, 0x97, 0xbc, 0x8d, 0xa2, 0x60, 0x5b, 0xd1, 0x7e, 0xa5, 0x3b, 0x22,
-	0xc2, 0x03, 0x44, 0xb4, 0x0f, 0x14, 0x11, 0xed, 0x11, 0x71, 0x7b, 0xfc, 0xb6, 0x88, 0xd9, 0xfb,
-	0x22, 0x66, 0x9f, 0x8b, 0x98, 0xbd, 0x7e, 0xc5, 0xff, 0x8a, 0x90, 0x9e, 0xde, 0xf5, 0x77, 0x00,
-	0x00, 0x00, 0xff, 0xff, 0xfe, 0x3f, 0xe7, 0x53, 0xc2, 0x02, 0x00, 0x00,
+	// 360 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x92, 0x41, 0x4e, 0xe3, 0x30,
+	0x14, 0x86, 0xc7, 0x93, 0x36, 0xcd, 0xbc, 0xa6, 0xa3, 0xca, 0x9a, 0x85, 0xd5, 0x45, 0x14, 0x55,
+	0x23, 0x14, 0x21, 0xd1, 0x2e, 0x38, 0x01, 0xb0, 0xea, 0x0e, 0xe5, 0x02, 0x28, 0x71, 0x4c, 0xb0,
+	0xd4, 0xc4, 0xd1, 0x8b, 0x5b, 0xee, 0xc0, 0x09, 0x38, 0x12, 0x4b, 0x8e, 0x80, 0xca, 0x05, 0x38,
+	0x02, 0xca, 0x0b, 0xad, 0xd2, 0x02, 0x02, 0x76, 0xfe, 0x7e, 0x3f, 0xe7, 0xc5, 0xdf, 0x33, 0x0c,
+	0x33, 0xd4, 0x6b, 0x35, 0xab, 0xd0, 0x58, 0xc3, 0x3d, 0x82, 0xab, 0x2a, 0x9d, 0x9c, 0xe4, 0xda,
+	0xde, 0xac, 0xd2, 0x99, 0x34, 0xc5, 0x3c, 0x37, 0xb9, 0x99, 0x53, 0x41, 0xba, 0xba, 0x26, 0x22,
+	0xa0, 0x55, 0x7b, 0x70, 0x7a, 0xe7, 0x80, 0x77, 0x61, 0x4a, 0x8b, 0x89, 0xb4, 0xfc, 0x1f, 0xf4,
+	0xe9, 0x3b, 0x82, 0x85, 0x2c, 0xf2, 0xe3, 0x16, 0x9a, 0xd4, 0xdc, 0x96, 0x0a, 0xc5, 0xef, 0x36,
+	0x25, 0xe0, 0x02, 0x06, 0x85, 0x2a, 0x52, 0x85, 0xb5, 0x70, 0x42, 0x27, 0xf2, 0xe3, 0x2d, 0xf2,
+	0x09, 0x78, 0xd9, 0x0a, 0x13, 0xab, 0x4d, 0x29, 0x7a, 0x21, 0x8b, 0x9c, 0x78, 0xc7, 0xcd, 0x29,
+	0x89, 0x2a, 0xb1, 0x2a, 0x13, 0x7d, 0xda, 0xda, 0x62, 0xd3, 0xa5, 0xae, 0x12, 0xa9, 0x84, 0x4b,
+	0x79, 0x0b, 0x9c, 0x43, 0x0f, 0x8d, 0xb1, 0x62, 0x40, 0xad, 0x69, 0xcd, 0x03, 0x00, 0xf9, 0xf6,
+	0xc7, 0x8b, 0x4c, 0x78, 0xb4, 0xd3, 0x49, 0x9a, 0xfe, 0xa8, 0xaa, 0xa5, 0x96, 0x49, 0x2d, 0xfe,
+	0x84, 0x2c, 0x1a, 0xc5, 0x3b, 0xe6, 0x47, 0xf0, 0xb7, 0xd0, 0x65, 0xdc, 0xa2, 0x35, 0x58, 0x0b,
+	0xa0, 0x8a, 0x83, 0x94, 0x1f, 0xc3, 0xb8, 0x52, 0x28, 0x55, 0x69, 0xcf, 0xaa, 0x0a, 0xcd, 0xba,
+	0xb9, 0xe6, 0x90, 0x2a, 0xdf, 0xe5, 0x7c, 0x0a, 0x7e, 0xaa, 0x97, 0x4b, 0x5d, 0xe6, 0x97, 0xa8,
+	0xa5, 0x12, 0x3e, 0x5d, 0x60, 0x2f, 0xe3, 0xff, 0x61, 0xb4, 0x65, 0x85, 0xda, 0x64, 0x62, 0x44,
+	0x45, 0xfb, 0xe1, 0xf4, 0x85, 0x81, 0xbb, 0x28, 0xd7, 0xda, 0xaa, 0x1f, 0x8d, 0xa2, 0x2b, 0xdc,
+	0x39, 0x10, 0xbe, 0xd3, 0xda, 0xeb, 0x6a, 0xfd, 0x7c, 0x0c, 0x5d, 0x79, 0xee, 0x97, 0xf2, 0x06,
+	0xdf, 0x96, 0xe7, 0x7d, 0x2c, 0xef, 0x7c, 0xfc, 0xb0, 0x09, 0xd8, 0xe3, 0x26, 0x60, 0x4f, 0x9b,
+	0x80, 0xdd, 0x3f, 0x07, 0xbf, 0x52, 0x97, 0x1e, 0xe6, 0xe9, 0x6b, 0x00, 0x00, 0x00, 0xff, 0xff,
+	0x83, 0x6a, 0x2f, 0xfb, 0xe0, 0x02, 0x00, 0x00,
 }
 
 func (m *Contract) Marshal() (dAtA []byte, err error) {
@@ -309,18 +327,28 @@ func (m *Contract) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.XXX_unrecognized)
 		copy(dAtA[i:], m.XXX_unrecognized)
 	}
-	if m.MinApproversDelta != 0 {
-		i = encodeVarintDrive(dAtA, i, uint64(m.MinApproversDelta))
+	if m.BillingPeriod != 0 {
+		i = encodeVarintDrive(dAtA, i, uint64(m.BillingPeriod))
+		i--
+		dAtA[i] = 0x68
+	}
+	if m.BillingPrice != 0 {
+		i = encodeVarintDrive(dAtA, i, uint64(m.BillingPrice))
+		i--
+		dAtA[i] = 0x60
+	}
+	if m.PercentApprovers != 0 {
+		i = encodeVarintDrive(dAtA, i, uint64(m.PercentApprovers))
 		i--
 		dAtA[i] = 0x58
 	}
-	if m.MinReplicatorsDelta != 0 {
-		i = encodeVarintDrive(dAtA, i, uint64(m.MinReplicatorsDelta))
+	if m.MinReplicators != 0 {
+		i = encodeVarintDrive(dAtA, i, uint64(m.MinReplicators))
 		i--
 		dAtA[i] = 0x50
 	}
-	if m.ReplicasDelta != 0 {
-		i = encodeVarintDrive(dAtA, i, uint64(m.ReplicasDelta))
+	if m.Replicas != 0 {
+		i = encodeVarintDrive(dAtA, i, uint64(m.Replicas))
 		i--
 		dAtA[i] = 0x48
 	}
@@ -403,18 +431,18 @@ func (m *Invite) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.XXX_unrecognized)
 		copy(dAtA[i:], m.XXX_unrecognized)
 	}
-	if m.MinApproversDelta != 0 {
-		i = encodeVarintDrive(dAtA, i, uint64(m.MinApproversDelta))
+	if m.PercentApprovers != 0 {
+		i = encodeVarintDrive(dAtA, i, uint64(m.PercentApprovers))
 		i--
 		dAtA[i] = 0x40
 	}
-	if m.MinReplicatorsDelta != 0 {
-		i = encodeVarintDrive(dAtA, i, uint64(m.MinReplicatorsDelta))
+	if m.MinReplicators != 0 {
+		i = encodeVarintDrive(dAtA, i, uint64(m.MinReplicators))
 		i--
 		dAtA[i] = 0x38
 	}
-	if m.ReplicasDelta != 0 {
-		i = encodeVarintDrive(dAtA, i, uint64(m.ReplicasDelta))
+	if m.Replicas != 0 {
+		i = encodeVarintDrive(dAtA, i, uint64(m.Replicas))
 		i--
 		dAtA[i] = 0x30
 	}
@@ -498,14 +526,20 @@ func (m *Contract) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovDrive(uint64(l))
 	}
-	if m.ReplicasDelta != 0 {
-		n += 1 + sovDrive(uint64(m.ReplicasDelta))
+	if m.Replicas != 0 {
+		n += 1 + sovDrive(uint64(m.Replicas))
 	}
-	if m.MinReplicatorsDelta != 0 {
-		n += 1 + sovDrive(uint64(m.MinReplicatorsDelta))
+	if m.MinReplicators != 0 {
+		n += 1 + sovDrive(uint64(m.MinReplicators))
 	}
-	if m.MinApproversDelta != 0 {
-		n += 1 + sovDrive(uint64(m.MinApproversDelta))
+	if m.PercentApprovers != 0 {
+		n += 1 + sovDrive(uint64(m.PercentApprovers))
+	}
+	if m.BillingPrice != 0 {
+		n += 1 + sovDrive(uint64(m.BillingPrice))
+	}
+	if m.BillingPeriod != 0 {
+		n += 1 + sovDrive(uint64(m.BillingPeriod))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -536,14 +570,14 @@ func (m *Invite) Size() (n int) {
 	if m.Created != 0 {
 		n += 1 + sovDrive(uint64(m.Created))
 	}
-	if m.ReplicasDelta != 0 {
-		n += 1 + sovDrive(uint64(m.ReplicasDelta))
+	if m.Replicas != 0 {
+		n += 1 + sovDrive(uint64(m.Replicas))
 	}
-	if m.MinReplicatorsDelta != 0 {
-		n += 1 + sovDrive(uint64(m.MinReplicatorsDelta))
+	if m.MinReplicators != 0 {
+		n += 1 + sovDrive(uint64(m.MinReplicators))
 	}
-	if m.MinApproversDelta != 0 {
-		n += 1 + sovDrive(uint64(m.MinApproversDelta))
+	if m.PercentApprovers != 0 {
+		n += 1 + sovDrive(uint64(m.PercentApprovers))
 	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
@@ -700,7 +734,7 @@ func (m *Contract) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Duration |= uint64(b&0x7F) << shift
+				m.Duration |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -719,7 +753,7 @@ func (m *Contract) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Created |= uint64(b&0x7F) << shift
+				m.Created |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -738,7 +772,7 @@ func (m *Contract) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Space |= uint64(b&0x7F) << shift
+				m.Space |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -813,9 +847,9 @@ func (m *Contract) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 9:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReplicasDelta", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Replicas", wireType)
 			}
-			m.ReplicasDelta = 0
+			m.Replicas = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowDrive
@@ -825,16 +859,16 @@ func (m *Contract) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ReplicasDelta |= int32(b&0x7F) << shift
+				m.Replicas |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 10:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinReplicatorsDelta", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinReplicators", wireType)
 			}
-			m.MinReplicatorsDelta = 0
+			m.MinReplicators = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowDrive
@@ -844,16 +878,16 @@ func (m *Contract) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MinReplicatorsDelta |= int32(b&0x7F) << shift
+				m.MinReplicators |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 11:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinApproversDelta", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PercentApprovers", wireType)
 			}
-			m.MinApproversDelta = 0
+			m.PercentApprovers = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowDrive
@@ -863,7 +897,45 @@ func (m *Contract) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MinApproversDelta |= int32(b&0x7F) << shift
+				m.PercentApprovers |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 12:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BillingPrice", wireType)
+			}
+			m.BillingPrice = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDrive
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.BillingPrice |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 13:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BillingPeriod", wireType)
+			}
+			m.BillingPeriod = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDrive
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.BillingPeriod |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1004,7 +1076,7 @@ func (m *Invite) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Duration |= uint64(b&0x7F) << shift
+				m.Duration |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1023,7 +1095,7 @@ func (m *Invite) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Space |= uint64(b&0x7F) << shift
+				m.Space |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1042,16 +1114,16 @@ func (m *Invite) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Created |= uint64(b&0x7F) << shift
+				m.Created |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 6:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReplicasDelta", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Replicas", wireType)
 			}
-			m.ReplicasDelta = 0
+			m.Replicas = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowDrive
@@ -1061,16 +1133,16 @@ func (m *Invite) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ReplicasDelta |= int32(b&0x7F) << shift
+				m.Replicas |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 7:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinReplicatorsDelta", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinReplicators", wireType)
 			}
-			m.MinReplicatorsDelta = 0
+			m.MinReplicators = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowDrive
@@ -1080,16 +1152,16 @@ func (m *Invite) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MinReplicatorsDelta |= int32(b&0x7F) << shift
+				m.MinReplicators |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 8:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MinApproversDelta", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PercentApprovers", wireType)
 			}
-			m.MinApproversDelta = 0
+			m.PercentApprovers = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowDrive
@@ -1099,7 +1171,7 @@ func (m *Invite) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MinApproversDelta |= int32(b&0x7F) << shift
+				m.PercentApprovers |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

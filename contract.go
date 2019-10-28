@@ -29,13 +29,13 @@ type Contract interface {
 	// Duration of the contract.
 	// NOTE: May return time in milliseconds or amount of blocks,
 	// depending on the implementation.
-	Duration() uint64
+	Duration() int64
 
 	// Created is a Drive starting moment.
 	// Usually derived from ab invitation
 	// NOTE: May return time in milliseconds or amount of blocks,
 	// depending on the implementation.
-	Created() uint64
+	Created() int64
 
 	// Root is a drive of Drive's directory
 	// Formerly, represents the identifier of all content stored on drive.
@@ -43,16 +43,10 @@ type Contract interface {
 
 	// TotalSpace specifies total physical space used by Drive
 	// on member nodes.
-	TotalSpace() uint64
+	TotalSpace() int64
 
 	// PrivateKey specifies private key for signing
 	PrivateKey() crypto.PrivKey
 
 	ContractID() crypto.PubKey
-
-	Replicas() int8
-
-	MinReplicatorsDelta() int8
-
-	MinApproversDelta() int8
 }

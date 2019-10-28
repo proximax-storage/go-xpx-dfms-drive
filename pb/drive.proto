@@ -6,23 +6,25 @@ message Contract {
     bytes drive = 1;
     bytes owner = 2;
     repeated bytes members = 3;
-    uint64 duration = 4;
-    uint64 created = 5;
-    uint64 space = 6;
+    int64 duration = 4;
+    int64 created = 5;
+    int64 space = 6;
     bytes root = 7;
     bytes contractId = 8;
-    int32 replicasDelta = 9;
-    int32 minReplicatorsDelta = 10;
-    int32 minApproversDelta = 11;
+    uint32 replicas = 9;
+    uint32 minReplicators = 10;
+    uint32 percentApprovers = 11;
+    int64 billingPrice = 12;
+    int64 billingPeriod = 13;
 }
 
 message Invite {
     bytes drive = 1;
     bytes owner = 2;
-    uint64 duration = 3;
-    uint64 space = 4;
-    uint64 created = 5;
-    int32 replicasDelta = 6;
-    int32 minReplicatorsDelta = 7;
-    int32 minApproversDelta = 8;
+    int64 duration = 3;
+    int64 space = 4;
+    int64 created = 5;
+    uint32 replicas = 6;
+    uint32 minReplicators = 7;
+    uint32 percentApprovers = 8;
 }

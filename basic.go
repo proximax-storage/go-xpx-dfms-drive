@@ -9,18 +9,15 @@ import (
 )
 
 type BasicContract struct {
-	drive               ID
-	owner               peer.ID
-	members             []peer.ID
-	duration            uint64
-	created             uint64
-	root                cid.Cid
-	space               uint64
-	contractId          crypto.PubKey
-	privateKey          crypto.PrivKey
-	replicasDelta       int8
-	minReplicatorsDelta int8
-	minApproversDelta   int8
+	drive      ID
+	owner      peer.ID
+	members    []peer.ID
+	duration   int64
+	created    int64
+	root       cid.Cid
+	space      int64
+	contractId crypto.PubKey
+	privateKey crypto.PrivKey
 }
 
 func NewBasicContractFromInvite(
@@ -31,18 +28,15 @@ func NewBasicContractFromInvite(
 	privateKey crypto.PrivKey,
 ) *BasicContract {
 	return &BasicContract{
-		drive:               invite.Drive,
-		owner:               invite.Owner,
-		members:             members,
-		duration:            invite.Duration,
-		created:             invite.Created,
-		root:                root,
-		space:               invite.Space,
-		privateKey:          privateKey,
-		contractId:          contractId,
-		replicasDelta:       invite.ReplicasDelta,
-		minReplicatorsDelta: invite.MinReplicatorsDelta,
-		minApproversDelta:   invite.MinApproversDelta,
+		drive:      invite.Drive,
+		owner:      invite.Owner,
+		members:    members,
+		duration:   invite.Duration,
+		created:    invite.Created,
+		root:       root,
+		space:      invite.Space,
+		privateKey: privateKey,
+		contractId: contractId,
 	}
 }
 
@@ -70,11 +64,11 @@ func (c *BasicContract) Members() []peer.ID {
 	return c.members
 }
 
-func (c *BasicContract) Duration() uint64 {
+func (c *BasicContract) Duration() int64 {
 	return c.duration
 }
 
-func (c *BasicContract) Created() uint64 {
+func (c *BasicContract) Created() int64 {
 	return c.created
 }
 
@@ -82,20 +76,8 @@ func (c *BasicContract) Root() cid.Cid {
 	return c.root
 }
 
-func (c *BasicContract) TotalSpace() uint64 {
+func (c *BasicContract) TotalSpace() int64 {
 	return c.space
-}
-
-func (c *BasicContract) Replicas() int8 {
-	return c.replicasDelta
-}
-
-func (c *BasicContract) MinReplicatorsDelta() int8 {
-	return c.minReplicatorsDelta
-}
-
-func (c *BasicContract) MinApproversDelta() int8 {
-	return c.minApproversDelta
 }
 
 func (c *BasicContract) MarshalBinary() ([]byte, error) {
@@ -143,7 +125,6 @@ func (c *BasicContract) UnmarshalJSON(data []byte) error {
 	c.created = cjson.Created
 	c.root = cjson.Root
 	c.space = cjson.Space
-	c.replicasDelta = cjson.Replicas
 	c.contractId = contractId
 
 	return nil

@@ -34,17 +34,15 @@ func MarshalBasicContract(basic *BasicContract) ([]byte, error) {
 	}
 
 	proto := &pb.Contract{
-		Drive:               basic.drive.Bytes(),
-		Owner:               []byte(basic.owner),
-		Members:             make([][]byte, len(basic.members)),
-		Duration:            basic.duration,
-		Created:             basic.created,
-		Space:               basic.space,
-		ReplicasDelta:       int32(basic.replicasDelta),
-		MinReplicatorsDelta: int32(basic.minReplicatorsDelta),
-		MinApproversDelta:   int32(basic.minApproversDelta),
-		Root:                basic.root.Bytes(),
-		ContractId:          ctr,
+		Drive:    basic.drive.Bytes(),
+		Owner:    []byte(basic.owner),
+		Members:  make([][]byte, len(basic.members)),
+		Duration: basic.duration,
+		Created:  basic.created,
+		Space:    basic.space,
+		Root:     basic.root.Bytes(),
+
+		ContractId: ctr,
 	}
 
 	for i, m := range basic.members {
@@ -72,17 +70,14 @@ func WriteBasicContract(w io.Writer, basic *BasicContract) error {
 		return err
 	}
 	proto := &pb.Contract{
-		Drive:               basic.drive.Bytes(),
-		Owner:               []byte(basic.owner),
-		Members:             make([][]byte, len(basic.members)),
-		Duration:            basic.duration,
-		Created:             basic.created,
-		Space:               basic.space,
-		ReplicasDelta:       int32(basic.replicasDelta),
-		MinReplicatorsDelta: int32(basic.minReplicatorsDelta),
-		MinApproversDelta:   int32(basic.minApproversDelta),
-		Root:                basic.root.Bytes(),
-		ContractId:          ctr,
+		Drive:      basic.drive.Bytes(),
+		Owner:      []byte(basic.owner),
+		Members:    make([][]byte, len(basic.members)),
+		Duration:   basic.duration,
+		Created:    basic.created,
+		Space:      basic.space,
+		Root:       basic.root.Bytes(),
+		ContractId: ctr,
 	}
 
 	for i, m := range basic.members {
@@ -149,13 +144,10 @@ func ReadInvite(r io.Reader) (Invite, error) {
 
 func protoToBasicContract(proto *pb.Contract) (basic *BasicContract, err error) {
 	basic = &BasicContract{
-		duration:            proto.Duration,
-		created:             proto.Created,
-		space:               proto.Space,
-		replicasDelta:       int8(proto.ReplicasDelta),
-		minApproversDelta:   int8(proto.MinApproversDelta),
-		minReplicatorsDelta: int8(proto.MinReplicatorsDelta),
-		members:             make([]peer.ID, len(proto.Members)),
+		duration: proto.Duration,
+		created:  proto.Created,
+		space:    proto.Space,
+		members:  make([]peer.ID, len(proto.Members)),
 	}
 
 	basic.drive, err = UnmarshalID(proto.Drive)
@@ -209,12 +201,13 @@ func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 
 func protoToLedgerContract(proto *pb.Contract) (basic *LedgerContract, err error) {
 	basic = &LedgerContract{
-		duration:            proto.Duration,
-		created:             proto.Created,
-		space:               proto.Space,
-		replicasDelta:       int8(proto.ReplicasDelta),
-		minApproversDelta:   int8(proto.MinApproversDelta),
-		minReplicatorsDelta: int8(proto.MinReplicatorsDelta),
+		duration:         proto.Duration,
+		space:            proto.Space,
+		replicas:         uint16(proto.Replicas),
+		minReplicators:   uint16(proto.MinReplicators),
+		percentApprovers: uint8(proto.PercentApprovers),
+		billingPrice:     proto.BillingPrice,
+		billingPeriod:    proto.BillingPeriod,
 	}
 
 	basic.drive, err = UnmarshalID(proto.Drive)
@@ -246,16 +239,15 @@ func MarshalLedgerContract(basic *LedgerContract) ([]byte, error) {
 	}
 
 	proto := &pb.Contract{
-		Drive:               basic.drive.Bytes(),
-		Owner:               []byte(basic.owner),
-		Duration:            basic.duration,
-		Created:             basic.created,
-		Space:               basic.space,
-		Root:                basic.root.Bytes(),
-		ContractId:          ctr,
-		ReplicasDelta:       int32(basic.replicasDelta),
-		MinReplicatorsDelta: int32(basic.minReplicatorsDelta),
-		MinApproversDelta:   int32(basic.minApproversDelta),
+		Drive:            basic.drive.Bytes(),
+		Owner:            []byte(basic.owner),
+		Duration:         basic.duration,
+		Space:            basic.space,
+		Root:             basic.root.Bytes(),
+		ContractId:       ctr,
+		Replicas:         uint32(basic.replicas),
+		MinReplicators:   uint32(basic.minReplicators),
+		PercentApprovers: uint32(basic.percentApprovers),
 	}
 
 	return proto.Marshal()
@@ -272,28 +264,27 @@ func UnmarshalLedgerContract(data []byte) (*LedgerContract, error) {
 }
 
 type basicContractJSON struct {
-	Drive               ID        `json:"drive"`
-	Owner               peer.ID   `json:"owner"`
-	Members             []peer.ID `json:"members"`
-	Duration            uint64    `json:"duration"`
-	Created             uint64    `json:"created"`
-	Root                cid.Cid   `json:"root"`
-	Space               uint64    `json:"space"`
-	ContractId          []byte    `json:"contractId"`
-	Replicas            int8      `json:"replicas"`
-	MinReplicatorsDelta int8      `json:"minReplicatorsDelta"`
-	MinApproversDelta   int8      `json:"minApproversDelta"`
+	Drive            ID        `json:"drive"`
+	Owner            peer.ID   `json:"owner"`
+	Members          []peer.ID `json:"members"`
+	Duration         int64     `json:"duration"`
+	Created          int64     `json:"created"`
+	Root             cid.Cid   `json:"root"`
+	Space            int64     `json:"space"`
+	ContractId       []byte    `json:"contractId"`
+	Replicas         uint16    `json:"replicas"`
+	MinReplicators   uint16    `json:"minReplicators"`
+	PercentApprovers uint8     `json:"percentApprovers"`
 }
 
 type ledgerContractJSON struct {
-	Drive               ID      `json:"drive"`
-	Owner               peer.ID `json:"owner"`
-	Duration            uint64  `json:"duration"`
-	Created             uint64  `json:"created"`
-	Root                cid.Cid `json:"root"`
-	Space               uint64  `json:"space"`
-	ContractId          []byte  `json:"contractId"`
-	Replicas            int8    `json:"replicas"`
-	MinReplicatorsDelta int8    `json:"minReplicatorsDelta"`
-	MinApproversDelta   int8    `json:"minApproversDelta"`
+	Drive            ID      `json:"drive"`
+	Owner            peer.ID `json:"owner"`
+	Duration         int64   `json:"duration"`
+	Root             cid.Cid `json:"root"`
+	Space            int64   `json:"space"`
+	ContractId       []byte  `json:"contractId"`
+	Replicas         uint16  `json:"replicas"`
+	MinReplicators   uint16  `json:"minReplicators"`
+	PercentApprovers uint8   `json:"percentApprovers"`
 }
