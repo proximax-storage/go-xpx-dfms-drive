@@ -25,6 +25,7 @@ type BasicContract struct {
 
 func NewBasicContractFromInvite(
 	invite Invite,
+	members []peer.ID,
 	root cid.Cid,
 	contractId crypto.PubKey,
 	privateKey crypto.PrivKey,
@@ -32,6 +33,7 @@ func NewBasicContractFromInvite(
 	return &BasicContract{
 		drive:               invite.Drive,
 		owner:               invite.Owner,
+		members:             members,
 		duration:            invite.Duration,
 		created:             invite.Created,
 		root:                root,

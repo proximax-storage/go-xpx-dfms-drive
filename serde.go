@@ -207,6 +207,70 @@ func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 	return
 }
 
+func protoToLedgerContract(proto *pb.Contract) (basic *LedgerContract, err error) {
+	basic = &LedgerContract{
+		duration:            proto.Duration,
+		created:             proto.Created,
+		space:               proto.Space,
+		replicasDelta:       int8(proto.ReplicasDelta),
+		minApproversDelta:   int8(proto.MinApproversDelta),
+		minReplicatorsDelta: int8(proto.MinReplicatorsDelta),
+	}
+
+	basic.drive, err = UnmarshalID(proto.Drive)
+	if err != nil {
+		return
+	}
+
+	basic.root, err = cid.Cast(proto.Root)
+	if err != nil {
+		return
+	}
+
+	basic.owner, err = peer.IDFromBytes(proto.Owner)
+	if err != nil {
+		return
+	}
+
+	basic.contractId, err = crypto.UnmarshalPublicKey(proto.ContractId)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func MarshalLedgerContract(basic *LedgerContract) ([]byte, error) {
+	ctr, err := basic.privateKey.GetPublic().Bytes()
+	if err != nil {
+		return nil, err
+	}
+
+	proto := &pb.Contract{
+		Drive:               basic.drive.Bytes(),
+		Owner:               []byte(basic.owner),
+		Duration:            basic.duration,
+		Created:             basic.created,
+		Space:               basic.space,
+		Root:                basic.root.Bytes(),
+		ContractId:          ctr,
+		ReplicasDelta:       int32(basic.replicasDelta),
+		MinReplicatorsDelta: int32(basic.minReplicatorsDelta),
+		MinApproversDelta:   int32(basic.minApproversDelta),
+	}
+
+	return proto.Marshal()
+}
+
+func UnmarshalLedgerContract(data []byte) (*LedgerContract, error) {
+	proto := new(pb.Contract)
+	err := proto.Unmarshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return protoToLedgerContract(proto)
+}
+
 type basicContractJSON struct {
 	Drive               ID        `json:"drive"`
 	Owner               peer.ID   `json:"owner"`
@@ -219,4 +283,17 @@ type basicContractJSON struct {
 	Replicas            int8      `json:"replicas"`
 	MinReplicatorsDelta int8      `json:"minReplicatorsDelta"`
 	MinApproversDelta   int8      `json:"minApproversDelta"`
+}
+
+type ledgerContractJSON struct {
+	Drive               ID      `json:"drive"`
+	Owner               peer.ID `json:"owner"`
+	Duration            uint64  `json:"duration"`
+	Created             uint64  `json:"created"`
+	Root                cid.Cid `json:"root"`
+	Space               uint64  `json:"space"`
+	ContractId          []byte  `json:"contractId"`
+	Replicas            int8    `json:"replicas"`
+	MinReplicatorsDelta int8    `json:"minReplicatorsDelta"`
+	MinApproversDelta   int8    `json:"minApproversDelta"`
 }
