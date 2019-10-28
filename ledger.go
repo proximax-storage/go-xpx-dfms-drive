@@ -21,15 +21,24 @@ type LedgerContract struct {
 	minApproversDelta   int8
 }
 
-func NewLedgerContractFromInvite(invite Invite, root cid.Cid, contractId crypto.PubKey) *LedgerContract {
+func NewLedgerContractFromInvite(
+	invite Invite,
+	root cid.Cid,
+	contractId crypto.PubKey,
+	privateKey crypto.PrivKey,
+) *LedgerContract {
 	return &LedgerContract{
-		drive:      invite.Drive,
-		owner:      invite.Owner,
-		duration:   invite.Duration,
-		created:    invite.Created,
-		root:       root,
-		space:      invite.Space,
-		contractId: contractId,
+		drive:               invite.Drive,
+		owner:               invite.Owner,
+		duration:            invite.Duration,
+		created:             invite.Created,
+		root:                root,
+		space:               invite.Space,
+		contractId:          contractId,
+		privateKey:          privateKey,
+		replicasDelta:       invite.ReplicasDelta,
+		minReplicatorsDelta: invite.MinReplicatorsDelta,
+		minApproversDelta:   invite.MinApproversDelta,
 	}
 }
 
