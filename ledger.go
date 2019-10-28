@@ -54,6 +54,10 @@ func (c *LedgerContract) ContractID() crypto.PubKey {
 	return c.contractId
 }
 
+func (c *LedgerContract) PrivateKey() crypto.PrivKey {
+	return c.privateKey
+}
+
 func (c *LedgerContract) Duration() uint64 {
 	return c.duration
 }
