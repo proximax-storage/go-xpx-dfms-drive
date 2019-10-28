@@ -22,4 +22,7 @@ message Invite {
     uint64 duration = 3;
     uint64 space = 4;
     uint64 created = 5;
+    int32 replicasDelta = 6;
+    int32 minReplicatorsDelta = 7;
+    int32 minApproversDelta = 8;
 }
