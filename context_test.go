@@ -7,7 +7,7 @@ import (
 )
 
 func TestContextWithContract(t *testing.T) {
-	in := RandBasicContract(t)
+	in := RandContract(t)
 
 	out := ContractFromContext(ContextWithContract(context.Background(), in))
 

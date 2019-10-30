@@ -1,20 +1,12 @@
 package drive
 
 import (
-	"io"
-
-	"github.com/Wondertan/go-serde"
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 
 	pb "github.com/proximax-storage/go-xpx-dfms-drive/pb"
 )
-
-// MarshalID serializes drive.ID to bytes.
-func MarshalID(id ID) ([]byte, error) {
-	return id.MarshalBinary()
-}
 
 // UnmarshalID deserializes Id from bytes.
 func UnmarshalID(data []byte) (ID, error) {
@@ -24,77 +16,6 @@ func UnmarshalID(data []byte) (ID, error) {
 	}
 
 	return id, nil
-}
-
-// MarshalBasicContract serializes BasicContract to bytes using protobuf.
-func MarshalBasicContract(basic *BasicContract) ([]byte, error) {
-	ctr, err := basic.contractId.Bytes()
-	if err != nil {
-		return nil, err
-	}
-
-	proto := &pb.Contract{
-		Drive:      basic.drive.Bytes(),
-		Owner:      []byte(basic.owner),
-		Members:    make([][]byte, len(basic.members)),
-		Duration:   basic.duration,
-		Created:    basic.created,
-		Space:      basic.space,
-		Root:       basic.root.Bytes(),
-		ContractId: ctr,
-	}
-
-	for i, m := range basic.members {
-		proto.Members[i] = []byte(m)
-	}
-
-	return proto.Marshal()
-}
-
-// UnmarshalBasicContract deserializes BasicContract from bytes using protobuf.
-func UnmarshalBasicContract(data []byte) (*BasicContract, error) {
-	proto := new(pb.Contract)
-	err := proto.Unmarshal(data)
-	if err != nil {
-		return nil, err
-	}
-
-	return protoToBasicContract(proto)
-}
-
-// WriteBasicContract serializes invite to the Writer
-func WriteBasicContract(w io.Writer, basic *BasicContract) error {
-	ctr, err := basic.contractId.Bytes()
-	if err != nil {
-		return err
-	}
-	proto := &pb.Contract{
-		Drive:      basic.drive.Bytes(),
-		Owner:      []byte(basic.owner),
-		Members:    make([][]byte, len(basic.members)),
-		Duration:   basic.duration,
-		Created:    basic.created,
-		Space:      basic.space,
-		Root:       basic.root.Bytes(),
-		ContractId: ctr,
-	}
-
-	for i, m := range basic.members {
-		proto.Members[i] = []byte(m)
-	}
-
-	return serde.WriteMessage(w, proto)
-}
-
-// ReadBasicContract deserialize invite from Reader
-func ReadBasicContract(r io.Reader) (*BasicContract, error) {
-	proto := new(pb.Contract)
-	err := serde.ReadMessage(r, proto)
-	if err != nil {
-		return nil, err
-	}
-
-	return protoToBasicContract(proto)
 }
 
 // MarshalInvite serializes Invite to bytes using protobuf.
@@ -119,65 +40,6 @@ func UnmarshalInvite(data []byte) (Invite, error) {
 	return protoToInvite(proto)
 }
 
-// WriteInvite serializes invite to the Writer
-func WriteInvite(w io.Writer, invite Invite) error {
-	return serde.WriteMessage(w, &pb.Invite{
-		Drive:    invite.Drive.Bytes(),
-		Owner:    []byte(invite.Owner),
-		Duration: invite.Duration,
-		Space:    invite.Space,
-		Created:  invite.Created,
-	})
-}
-
-// ReadInvite deserialize invite from Reader
-func ReadInvite(r io.Reader) (Invite, error) {
-	proto := new(pb.Invite)
-	err := serde.ReadMessage(r, proto)
-	if err != nil {
-		return NilInvite, err
-	}
-
-	return protoToInvite(proto)
-}
-
-func protoToBasicContract(proto *pb.Contract) (basic *BasicContract, err error) {
-	basic = &BasicContract{
-		duration: proto.Duration,
-		created:  proto.Created,
-		space:    proto.Space,
-		members:  make([]peer.ID, len(proto.Members)),
-	}
-
-	basic.drive, err = UnmarshalID(proto.Drive)
-	if err != nil {
-		return
-	}
-
-	basic.root, err = cid.Cast(proto.Root)
-	if err != nil {
-		return
-	}
-
-	basic.owner, err = peer.IDFromBytes(proto.Owner)
-	if err != nil {
-		return
-	}
-
-	basic.contractId, err = crypto.UnmarshalPublicKey(proto.ContractId)
-	if err != nil {
-		return
-	}
-
-	for i, m := range proto.Members {
-		basic.members[i], err = peer.IDFromBytes(m)
-		if err != nil {
-			return
-		}
-	}
-	return
-}
-
 func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 	invite = Invite{
 		Created:  proto.Created,
@@ -198,13 +60,91 @@ func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 	return
 }
 
-type basicContractJSON struct {
-	Drive      ID        `json:"drive"`
-	Owner      peer.ID   `json:"owner"`
-	Members    []peer.ID `json:"members"`
-	Duration   uint64    `json:"duration"`
-	Created    uint64    `json:"created"`
-	Root       cid.Cid   `json:"root"`
-	Space      uint64    `json:"space"`
-	ContractId []byte    `json:"contractId"`
+func protoToContract(proto *pb.Contract) (contract *Contract, err error) {
+	contract = &Contract{
+		Duration:         proto.Duration,
+		Space:            proto.Space,
+		Replicas:         uint16(proto.Replicas),
+		MinReplicators:   uint16(proto.MinReplicators),
+		PercentApprovers: uint8(proto.PercentApprovers),
+		BillingPrice:     proto.BillingPrice,
+		BillingPeriod:    proto.BillingPeriod,
+		Members:          make([]peer.ID, len(proto.Members)),
+	}
+
+	contract.Drive, err = UnmarshalID(proto.Drive)
+	if err != nil {
+		return
+	}
+
+	contract.Root, err = cid.Cast(proto.Root)
+	if err != nil {
+		return
+	}
+
+	contract.Owner, err = peer.IDFromBytes(proto.Owner)
+	if err != nil {
+		return
+	}
+
+	contract.ContractId, err = crypto.UnmarshalPublicKey(proto.ContractId)
+	if err != nil {
+		return
+	}
+
+	for i, m := range proto.Members {
+		contract.Members[i], err = peer.IDFromBytes(m)
+		if err != nil {
+			return
+		}
+	}
+	return
+}
+
+func MarshalContract(contract *Contract) ([]byte, error) {
+	ctr, err := contract.PrivateKey.GetPublic().Bytes()
+	if err != nil {
+		return nil, err
+	}
+
+	proto := &pb.Contract{
+		Drive:            contract.Drive.Bytes(),
+		Owner:            []byte(contract.Owner),
+		Duration:         contract.Duration,
+		Space:            contract.Space,
+		Root:             contract.Root.Bytes(),
+		ContractId:       ctr,
+		Replicas:         uint32(contract.Replicas),
+		MinReplicators:   uint32(contract.MinReplicators),
+		PercentApprovers: uint32(contract.PercentApprovers),
+		Members:          make([][]byte, len(contract.Members)),
+	}
+
+	for i, m := range contract.Members {
+		proto.Members[i] = []byte(m)
+	}
+	return proto.Marshal()
+}
+
+func UnmarshalContract(data []byte) (*Contract, error) {
+	proto := new(pb.Contract)
+	err := proto.Unmarshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return protoToContract(proto)
+}
+
+type contractJSON struct {
+	Drive            ID        `json:"drive"`
+	Owner            peer.ID   `json:"owner"`
+	Duration         int64     `json:"duration"`
+	Root             cid.Cid   `json:"root"`
+	Space            int64     `json:"space"`
+	ContractId       []byte    `json:"contractId"`
+	Replicas         uint16    `json:"replicas"`
+	MinReplicators   uint16    `json:"minReplicators"`
+	PercentApprovers uint8     `json:"percentApprovers"`
+	Members          []peer.ID `json:"members"`
 }
