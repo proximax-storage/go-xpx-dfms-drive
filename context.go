@@ -16,10 +16,10 @@ func ContractFromContext(ctx context.Context) *Contract {
 		return nil
 	}
 
-	d, ok := value.(Contract)
+	d, ok := value.(*Contract)
 	if !ok {
 		panic("context value for contractKey is not a Drive")
 	}
 
-	return &d
+	return d
 }

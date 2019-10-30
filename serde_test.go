@@ -5,15 +5,15 @@ import (
 	"testing"
 )
 
-func TestMarshalUnmarshalBinaryBasicContract(t *testing.T) {
-	in := RandBasicContract(t)
+func TestMarshalUnmarshalBinaryContract(t *testing.T) {
+	in := RandContract(t)
 
 	bytes, err := in.MarshalBinary()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	out := &BasicContract{}
+	out := &Contract{}
 	err = out.UnmarshalBinary(bytes)
 	if err != nil {
 		t.Fatal(err)
@@ -24,15 +24,15 @@ func TestMarshalUnmarshalBinaryBasicContract(t *testing.T) {
 	}
 }
 
-func TestMarshalUnmarshalJSONBasicContract(t *testing.T) {
-	in := RandBasicContract(t)
+func TestMarshalUnmarshalJSONContract(t *testing.T) {
+	in := RandContract(t)
 
 	bytes, err := in.MarshalJSON()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	out := &BasicContract{}
+	out := &Contract{}
 	err = out.UnmarshalJSON(bytes)
 	if err != nil {
 		t.Fatal(err)

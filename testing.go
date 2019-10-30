@@ -37,24 +37,23 @@ func RandInvite(t *testing.T) Invite {
 	}
 }
 
-func RandBasicContract(t *testing.T) *BasicContract {
+func RandContract(t *testing.T) *Contract {
 	id := RandID(t)
 	privKey, pubKey, err := crypto.GenerateKeyPair(crypto.Ed25519, 1024)
 	if err != nil {
 		t.Fatal(err)
 	}
-	return &BasicContract{
-		drive: id,
-		root:  id,
-		owner: test.RandPeerIDFatal(t),
-		members: []peer.ID{
+	return &Contract{
+		Drive: id,
+		Root:  id,
+		Owner: test.RandPeerIDFatal(t),
+		Members: []peer.ID{
 			test.RandPeerIDFatal(t),
 			test.RandPeerIDFatal(t),
 		},
-		duration:   100,
-		created:    100,
-		space:      100,
-		contractId: pubKey,
-		privateKey: privKey,
+		Duration:   100,
+		Space:      100,
+		ContractId: pubKey,
+		PrivateKey: privKey,
 	}
 }
