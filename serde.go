@@ -69,6 +69,7 @@ func protoToContract(proto *pb.Contract) (contract *Contract, err error) {
 		PercentApprovers: uint8(proto.PercentApprovers),
 		BillingPrice:     proto.BillingPrice,
 		BillingPeriod:    proto.BillingPeriod,
+		Members:          make([]peer.ID, len(proto.Members)),
 	}
 
 	contract.Drive, err = UnmarshalID(proto.Drive)
@@ -100,24 +101,28 @@ func protoToContract(proto *pb.Contract) (contract *Contract, err error) {
 	return
 }
 
-func MarshalContract(basic *Contract) ([]byte, error) {
-	ctr, err := basic.PrivateKey.GetPublic().Bytes()
+func MarshalContract(contract *Contract) ([]byte, error) {
+	ctr, err := contract.PrivateKey.GetPublic().Bytes()
 	if err != nil {
 		return nil, err
 	}
 
 	proto := &pb.Contract{
-		Drive:            basic.Drive.Bytes(),
-		Owner:            []byte(basic.Owner),
-		Duration:         basic.Duration,
-		Space:            basic.Space,
-		Root:             basic.Root.Bytes(),
+		Drive:            contract.Drive.Bytes(),
+		Owner:            []byte(contract.Owner),
+		Duration:         contract.Duration,
+		Space:            contract.Space,
+		Root:             contract.Root.Bytes(),
 		ContractId:       ctr,
-		Replicas:         uint32(basic.Replicas),
-		MinReplicators:   uint32(basic.MinReplicators),
-		PercentApprovers: uint32(basic.PercentApprovers),
+		Replicas:         uint32(contract.Replicas),
+		MinReplicators:   uint32(contract.MinReplicators),
+		PercentApprovers: uint32(contract.PercentApprovers),
+		Members:          make([][]byte, len(contract.Members)),
 	}
 
+	for i, m := range contract.Members {
+		proto.Members[i] = []byte(m)
+	}
 	return proto.Marshal()
 }
 
