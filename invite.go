@@ -7,7 +7,7 @@ import (
 
 var NilInvite = Invite{}
 
-// Invite represents invitation for replicators to join Contract as a member.
+// Invite represents invitation for Replicators to join Contract as a member.
 type Invite struct {
 	Drive            ID
 	Created          int64

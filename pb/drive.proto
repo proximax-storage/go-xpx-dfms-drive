@@ -27,4 +27,5 @@ message Invite {
     uint32 replicas = 6;
     uint32 minReplicators = 7;
     uint32 percentApprovers = 8;
+    repeated bytes members = 3;
 }
