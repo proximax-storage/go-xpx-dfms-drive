@@ -2,7 +2,7 @@ package drive
 
 import (
 	"github.com/ipfs/go-cid"
-	"github.com/multiformats/go-multihash"
+	"github.com/libp2p/go-libp2p-core/crypto"
 )
 
 const (
@@ -16,13 +16,13 @@ func init() {
 }
 
 // ID represents identifier of the drive
-type ID = cid.Cid
+type ID = crypto.PubKey
 
 // NewIDFromInvite returns new ID generated from Invite
 func NewIDFromInvite(invite Invite) (ID, error) {
 	data, err := MarshalInvite(invite)
 	if err != nil {
-		return cid.Undef, err
+		return nil, err
 	}
 
 	return NewIDFromBytes(data)
@@ -30,10 +30,24 @@ func NewIDFromInvite(invite Invite) (ID, error) {
 
 // NewIDFromBytes creates new ID by hashing given Data
 func NewIDFromBytes(data []byte) (ID, error) {
-	hash, err := multihash.Sum(data, multihash.SHA2_256, -1)
-	if err != nil {
-		return ID{}, nil
-	}
+	return crypto.UnmarshalEd25519PublicKey(data)
+}
 
-	return cid.NewCidV1(Codec, hash), nil
+// IdFromString creates new ID by hashing given Data
+func NewIDFromString(data string) (ID, error) {
+	return crypto.UnmarshalEd25519PublicKey([]byte(data))
+}
+
+// IdFromBytes creates new ID by hashing given Data
+func IdFromBytes(data []byte) (ID, error) {
+	return crypto.UnmarshalPublicKey(data)
+}
+
+// NewIDFromBytes creates new ID by hashing given Data
+func IdToBytes(id ID) ([]byte, error) {
+	data, err := crypto.MarshalPublicKey(id)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
