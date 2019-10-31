@@ -168,8 +168,12 @@ func (c *Contract) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 
+	id, err := IdToBytes(c.Drive)
+	if err != nil {
+		return nil, err
+	}
 	return json.Marshal(&contractJSON{
-		Drive:            c.Drive,
+		Drive:            id,
 		Owner:            c.Owner,
 		Duration:         c.Duration,
 		Root:             c.Root,
@@ -193,7 +197,11 @@ func (c *Contract) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	c.Drive = cjson.Drive
+	id, err := IdFromBytes(cjson.Drive)
+	if err != nil {
+		return err
+	}
+	c.Drive = id
 	c.Owner = cjson.Owner
 	c.Duration = cjson.Duration
 	c.Root = cjson.Root

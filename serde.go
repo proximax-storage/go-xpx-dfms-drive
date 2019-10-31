@@ -8,20 +8,15 @@ import (
 	pb "github.com/proximax-storage/go-xpx-dfms-drive/pb"
 )
 
-// UnmarshalID deserializes Id from bytes.
-func UnmarshalID(data []byte) (ID, error) {
-	id, err := cid.Cast(data)
-	if err != nil {
-		return cid.Undef, err
-	}
-
-	return id, nil
-}
-
 // MarshalInvite serializes Invite to bytes using protobuf.
 func MarshalInvite(invite Invite) ([]byte, error) {
+	id, err := IdToBytes(invite.Drive)
+	if err != nil {
+		return nil, err
+	}
+
 	return (&pb.Invite{
-		Drive:    invite.Drive.Bytes(),
+		Drive:    id,
 		Owner:    []byte(invite.Owner),
 		Duration: invite.Duration,
 		Space:    invite.Space,
@@ -47,7 +42,7 @@ func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 		Space:    proto.Space,
 	}
 
-	invite.Drive, err = UnmarshalID(proto.Drive)
+	invite.Drive, err = IdFromBytes(proto.Drive)
 	if err != nil {
 		return NilInvite, err
 	}
@@ -72,7 +67,7 @@ func protoToContract(proto *pb.Contract) (contract *Contract, err error) {
 		Members:          make([]peer.ID, len(proto.Members)),
 	}
 
-	contract.Drive, err = UnmarshalID(proto.Drive)
+	contract.Drive, err = IdFromBytes(proto.Drive)
 	if err != nil {
 		return
 	}
@@ -107,8 +102,13 @@ func MarshalContract(contract *Contract) ([]byte, error) {
 		return nil, err
 	}
 
+	id, err := IdToBytes(contract.Drive)
+	if err != nil {
+		return nil, err
+	}
+
 	proto := &pb.Contract{
-		Drive:            contract.Drive.Bytes(),
+		Drive:            id,
 		Owner:            []byte(contract.Owner),
 		Duration:         contract.Duration,
 		Space:            contract.Space,
@@ -137,7 +137,7 @@ func UnmarshalContract(data []byte) (*Contract, error) {
 }
 
 type contractJSON struct {
-	Drive            ID        `json:"drive"`
+	Drive            []byte    `json:"drive"`
 	Owner            peer.ID   `json:"owner"`
 	Duration         int64     `json:"duration"`
 	Root             cid.Cid   `json:"root"`

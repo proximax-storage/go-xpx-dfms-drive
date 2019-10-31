@@ -13,7 +13,7 @@ import (
 	"github.com/multiformats/go-multihash"
 )
 
-func RandID(t *testing.T) ID {
+func RandCID(t *testing.T) cid.Cid {
 	b, err := ioutil.ReadAll(io.LimitReader(rand.Reader, 256))
 	if err != nil {
 		t.Fatal(err)
@@ -27,6 +27,19 @@ func RandID(t *testing.T) ID {
 	return cid.NewCidV1(cid.Raw, hash)
 }
 
+func RandID(t *testing.T) ID {
+	b, err := ioutil.ReadAll(io.LimitReader(rand.Reader, 32))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	hash, err := NewIDFromBytes(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return hash
+}
 func RandInvite(t *testing.T) Invite {
 	return Invite{
 		Drive:    RandID(t),
@@ -38,14 +51,14 @@ func RandInvite(t *testing.T) Invite {
 }
 
 func RandContract(t *testing.T) *Contract {
-	id := RandID(t)
+
 	privKey, pubKey, err := crypto.GenerateKeyPair(crypto.Ed25519, 1024)
 	if err != nil {
 		t.Fatal(err)
 	}
 	return &Contract{
-		Drive: id,
-		Root:  id,
+		Drive: RandID(t),
+		Root:  RandCID(t),
 		Owner: test.RandPeerIDFatal(t),
 		Members: []peer.ID{
 			test.RandPeerIDFatal(t),
