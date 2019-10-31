@@ -1,6 +1,8 @@
 package drive
 
 import (
+	"encoding/hex"
+
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/crypto"
 )
@@ -35,7 +37,21 @@ func NewIDFromBytes(data []byte) (ID, error) {
 
 // IdFromString creates new ID by hashing given Data
 func NewIDFromString(data string) (ID, error) {
-	return crypto.UnmarshalEd25519PublicKey([]byte(data))
+	dec, err := hex.DecodeString(data)
+	if err != nil {
+		return nil, err
+	}
+	return crypto.UnmarshalPublicKey(dec)
+}
+
+// IdFromString creates new ID by hashing given Data
+func IdToString(id ID) (string, error) {
+	s, err := crypto.MarshalPublicKey(id)
+	if err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(s), nil
 }
 
 // IdFromBytes creates new ID by hashing given Data
