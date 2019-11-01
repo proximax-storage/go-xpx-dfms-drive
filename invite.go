@@ -1,7 +1,6 @@
 package drive
 
 import (
-	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
@@ -14,7 +13,6 @@ type Invite struct {
 	Duration         int64
 	Space            int64
 	Owner            peer.ID
-	ContractID       crypto.PubKey
 	Replicas         uint16
 	MinReplicators   uint16
 	PercentApprovers uint8

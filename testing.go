@@ -52,7 +52,7 @@ func RandInvite(t *testing.T) Invite {
 
 func RandContract(t *testing.T) *Contract {
 
-	privKey, pubKey, err := crypto.GenerateKeyPair(crypto.Ed25519, 1024)
+	privKey, _, err := crypto.GenerateKeyPair(crypto.Ed25519, 1024)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -66,7 +66,6 @@ func RandContract(t *testing.T) *Contract {
 		},
 		Duration:   100,
 		Space:      100,
-		ContractId: pubKey,
 		PrivateKey: privKey,
 	}
 }

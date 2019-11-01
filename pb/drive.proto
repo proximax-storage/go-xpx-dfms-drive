@@ -10,12 +10,11 @@ message Contract {
     int64 created = 5;
     int64 space = 6;
     bytes root = 7;
-    bytes contractId = 8;
-    uint32 replicas = 9;
-    uint32 minReplicators = 10;
-    uint32 percentApprovers = 11;
-    int64 billingPrice = 12;
-    int64 billingPeriod = 13;
+    uint32 replicas = 8;
+    uint32 minReplicators = 9;
+    uint32 percentApprovers = 10;
+    int64 billingPrice = 11;
+    int64 billingPeriod = 12;
 }
 
 message Invite {
@@ -27,5 +26,5 @@ message Invite {
     uint32 replicas = 6;
     uint32 minReplicators = 7;
     uint32 percentApprovers = 8;
-    repeated bytes members = 3;
+    repeated bytes members = 9;
 }

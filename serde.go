@@ -2,7 +2,6 @@ package drive
 
 import (
 	"github.com/ipfs/go-cid"
-	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 
 	pb "github.com/proximax-storage/go-xpx-dfms-drive/pb"
@@ -82,11 +81,6 @@ func protoToContract(proto *pb.Contract) (contract *Contract, err error) {
 		return
 	}
 
-	contract.ContractId, err = crypto.UnmarshalPublicKey(proto.ContractId)
-	if err != nil {
-		return
-	}
-
 	for i, m := range proto.Members {
 		contract.Members[i], err = peer.IDFromBytes(m)
 		if err != nil {
@@ -97,10 +91,6 @@ func protoToContract(proto *pb.Contract) (contract *Contract, err error) {
 }
 
 func MarshalContract(contract *Contract) ([]byte, error) {
-	ctr, err := contract.PrivateKey.GetPublic().Bytes()
-	if err != nil {
-		return nil, err
-	}
 
 	id, err := IdToBytes(contract.Drive)
 	if err != nil {
@@ -113,7 +103,6 @@ func MarshalContract(contract *Contract) ([]byte, error) {
 		Duration:         contract.Duration,
 		Space:            contract.Space,
 		Root:             contract.Root.Bytes(),
-		ContractId:       ctr,
 		Replicas:         uint32(contract.Replicas),
 		MinReplicators:   uint32(contract.MinReplicators),
 		PercentApprovers: uint32(contract.PercentApprovers),

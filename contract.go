@@ -70,8 +70,6 @@ type Contract struct {
 
 	Files map[cid.Cid]*FileInfo
 
-	ContractId crypto.PubKey
-
 	// PrivateKey specifies private key for signing
 	PrivateKey crypto.PrivKey
 
@@ -89,7 +87,6 @@ type Contract struct {
 func NewContractFromInvite(
 	invite Invite,
 	root cid.Cid,
-	contractId crypto.PubKey,
 	privateKey crypto.PrivKey,
 	members ...peer.ID,
 ) *Contract {
@@ -105,7 +102,6 @@ func NewContractFromInvite(
 		BillingPeriod:    invite.BillingPeriod,
 		BillingPrice:     invite.BillingPrice,
 
-		ContractId: contractId,
 		PrivateKey: privateKey,
 		Members:    members,
 	}
@@ -123,7 +119,6 @@ func NewContract(
 	minReplicators uint16,
 	percentApprovers uint8,
 	replicators map[crypto.PubKey]*ReplicatorInfo,
-	contractId crypto.PubKey,
 	members ...peer.ID,
 
 ) *Contract {
@@ -140,7 +135,6 @@ func NewContract(
 		BillingPrice:     billingPrice,
 		Replicators:      replicators,
 		Members:          members,
-		ContractId:       contractId,
 	}
 }
 
@@ -163,10 +157,6 @@ func (c *Contract) UnmarshalBinary(data []byte) error {
 }
 
 func (c *Contract) MarshalJSON() ([]byte, error) {
-	contractId, err := c.ContractId.Bytes()
-	if err != nil {
-		return nil, err
-	}
 
 	id, err := IdToBytes(c.Drive)
 	if err != nil {
@@ -178,7 +168,6 @@ func (c *Contract) MarshalJSON() ([]byte, error) {
 		Duration:         c.Duration,
 		Root:             c.Root,
 		Space:            c.Space,
-		ContractId:       contractId,
 		Replicas:         c.Replicas,
 		MinReplicators:   c.MinReplicators,
 		PercentApprovers: c.PercentApprovers,
@@ -193,10 +182,6 @@ func (c *Contract) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	contractId, err := crypto.UnmarshalPublicKey(cjson.ContractId)
-	if err != nil {
-		return err
-	}
 	id, err := IdFromBytes(cjson.Drive)
 	if err != nil {
 		return err
@@ -206,7 +191,6 @@ func (c *Contract) UnmarshalJSON(data []byte) error {
 	c.Duration = cjson.Duration
 	c.Root = cjson.Root
 	c.Space = cjson.Space
-	c.ContractId = contractId
 	c.Replicas = cjson.Replicas
 	c.MinReplicators = cjson.MinReplicators
 	c.PercentApprovers = cjson.PercentApprovers
