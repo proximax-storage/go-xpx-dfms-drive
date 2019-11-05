@@ -3,9 +3,20 @@ package drive
 import (
 	"encoding/json"
 
+	"github.com/proximax-storage/go-xpx-chain-sdk/sdk"
+
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
+)
+
+// DriveRole possible Drive roles
+type DriveRole string
+
+const (
+	AllRoles       = DriveRole(sdk.AllRoles)
+	OwnerRole      = DriveRole(sdk.Owner)
+	ReplicatorRole = DriveRole(sdk.Replicator)
 )
 
 type PaymentInformation struct {
@@ -197,4 +208,21 @@ func (c *Contract) UnmarshalJSON(data []byte) error {
 	c.Members = cjson.Members
 
 	return nil
+}
+
+// ConvertContractFromDrive - convert from SDK Drive to Contract
+func ConvertContractFromDrive(d sdk.Drive, id ID, owner peer.ID) *Contract {
+	return NewContract(
+		uint8(d.State),
+		id,
+		owner,
+		int64(d.Duration),
+		int64(d.BillingPeriod),
+		int64(d.BillingPrice),
+		int64(d.DriveSize),
+		d.Replicas,
+		d.MinReplicators,
+		d.PercentApprovers,
+		nil,
+	)
 }
