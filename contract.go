@@ -211,7 +211,7 @@ func (c *Contract) UnmarshalJSON(data []byte) error {
 }
 
 // ConvertContractFromDrive - convert from SDK Drive to Contract
-func ConvertContractFromDrive(d sdk.Drive, id ID, owner peer.ID) *Contract {
+func ConvertContractFromDrive(d *sdk.Drive, id ID, owner peer.ID) *Contract {
 	return NewContract(
 		uint8(d.State),
 		id,
