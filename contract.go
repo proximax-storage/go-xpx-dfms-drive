@@ -8,6 +8,14 @@ import (
 	"github.com/libp2p/go-libp2p-core/peer"
 )
 
+// DriveRole - available Drive roles
+type DriveRole uint8
+
+const (
+	OwnerRole DriveRole = iota
+	ReplicatorRole
+)
+
 type PaymentInformation struct {
 	Receiver *crypto.PubKey
 	Amount   uint64
