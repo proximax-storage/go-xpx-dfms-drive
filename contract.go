@@ -26,6 +26,7 @@ type ReplicatorInfo struct {
 	Start               uint64
 	End                 uint64
 	Deposit             uint64
+	Index               int
 	FilesWithoutDeposit map[cid.Cid]uint16
 }
 
