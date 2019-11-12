@@ -1,7 +1,9 @@
 package drive
 
 import (
+	"encoding/json"
 	"github.com/ipfs/go-cid"
+	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 
 	pb "github.com/proximax-storage/go-xpx-dfms-drive/pb"
@@ -64,28 +66,42 @@ func protoToContract(proto *pb.Contract) (contract *Contract, err error) {
 		BillingPrice:     proto.BillingPrice,
 		BillingPeriod:    proto.BillingPeriod,
 		Members:          make([]peer.ID, len(proto.Members)),
+		Replicators:      make(map[crypto.PubKey]*ReplicatorInfo, len(proto.Replicators)),
 	}
 
 	contract.Drive, err = IdFromBytes(proto.Drive)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	contract.Root, err = cid.Cast(proto.Root)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	contract.Owner, err = peer.IDFromBytes(proto.Owner)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	for i, m := range proto.Members {
 		contract.Members[i], err = peer.IDFromBytes(m)
 		if err != nil {
-			return
+			return nil, err
 		}
+	}
+
+	for _, r := range proto.Replicators {
+		pubKey, err := IdFromBytes(r.PubKey)
+		if err != nil {
+			return nil, err
+		}
+		var rInfo *ReplicatorInfo
+		err = json.Unmarshal(r.Info, &rInfo)
+		if err != nil {
+			return nil, err
+		}
+		contract.Replicators[pubKey] = rInfo
 	}
 	return
 }
@@ -107,11 +123,31 @@ func MarshalContract(contract *Contract) ([]byte, error) {
 		MinReplicators:   uint32(contract.MinReplicators),
 		PercentApprovers: uint32(contract.PercentApprovers),
 		Members:          make([][]byte, len(contract.Members)),
+		Replicators:      make([]*pb.ReplicatorInfo, len(contract.Replicators)),
 	}
 
 	for i, m := range contract.Members {
 		proto.Members[i] = []byte(m)
 	}
+
+	iter := 0
+	for pk, r := range contract.Replicators {
+		pubKey, err := IdToBytes(pk)
+		if err != nil {
+			return nil, err
+		}
+		// TODO: move to Protobuf
+		rInfo, err := json.Marshal(r)
+		if err != nil {
+			return nil, err
+		}
+		proto.Replicators[iter] = &pb.ReplicatorInfo{
+			PubKey: pubKey,
+			Info:   rInfo,
+		}
+		iter++
+	}
+
 	return proto.Marshal()
 }
 

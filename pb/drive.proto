@@ -15,6 +15,12 @@ message Contract {
     uint32 percentApprovers = 10;
     int64 billingPrice = 11;
     int64 billingPeriod = 12;
+    repeated ReplicatorInfo replicators = 13;
+}
+
+message ReplicatorInfo {
+    bytes pubKey = 1;
+    bytes info = 2;
 }
 
 message Invite {
