@@ -17,11 +17,14 @@ func MarshalInvite(invite Invite) ([]byte, error) {
 	}
 
 	return (&pb.Invite{
-		Drive:    id,
-		Owner:    []byte(invite.Owner),
-		Duration: invite.Duration,
-		Space:    invite.Space,
-		Created:  invite.Created,
+		Drive:            id,
+		Owner:            []byte(invite.Owner),
+		Duration:         invite.Duration,
+		Space:            invite.Space,
+		Created:          invite.Created,
+		Replicas:         uint32(invite.Replicas),
+		MinReplicators:   uint32(invite.MinReplicators),
+		PercentApprovers: uint32(invite.PercentApprovers),
 	}).Marshal()
 }
 
@@ -38,9 +41,12 @@ func UnmarshalInvite(data []byte) (Invite, error) {
 
 func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 	invite = Invite{
-		Created:  proto.Created,
-		Duration: proto.Duration,
-		Space:    proto.Space,
+		Created:          proto.Created,
+		Duration:         proto.Duration,
+		Space:            proto.Space,
+		Replicas:         uint16(proto.Replicas),
+		MinReplicators:   uint16(proto.MinReplicators),
+		PercentApprovers: uint8(proto.PercentApprovers),
 	}
 
 	invite.Drive, err = IdFromBytes(proto.Drive)
