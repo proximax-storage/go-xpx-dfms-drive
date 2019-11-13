@@ -25,6 +25,8 @@ func MarshalInvite(invite Invite) ([]byte, error) {
 		Replicas:         uint32(invite.Replicas),
 		MinReplicators:   uint32(invite.MinReplicators),
 		PercentApprovers: uint32(invite.PercentApprovers),
+		BillingPeriod:    invite.BillingPeriod,
+		BillingPrice:     invite.BillingPrice,
 	}).Marshal()
 }
 
@@ -47,6 +49,8 @@ func protoToInvite(proto *pb.Invite) (invite Invite, err error) {
 		Replicas:         uint16(proto.Replicas),
 		MinReplicators:   uint16(proto.MinReplicators),
 		PercentApprovers: uint8(proto.PercentApprovers),
+		BillingPeriod:    proto.BillingPeriod,
+		BillingPrice:     proto.BillingPrice,
 	}
 
 	invite.Drive, err = IdFromBytes(proto.Drive)

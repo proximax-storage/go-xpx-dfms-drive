@@ -32,5 +32,7 @@ message Invite {
     uint32 replicas = 6;
     uint32 minReplicators = 7;
     uint32 percentApprovers = 8;
-    repeated bytes members = 9;
+    int64 billingPrice = 9;
+    int64 billingPeriod = 10;
+    repeated bytes members = 11;
 }
