@@ -1,8 +1,6 @@
 package drive
 
 import (
-	"encoding/hex"
-
 	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p-core/crypto"
 )
@@ -19,51 +17,3 @@ func init() {
 
 // ID represents identifier of the drive
 type ID = crypto.PubKey
-
-// NewIDFromInvite returns new ID generated from Invite
-func NewIDFromInvite(invite Invite) (ID, error) {
-	data, err := MarshalInvite(invite)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewIDFromBytes(data)
-}
-
-// NewIDFromBytes creates new ID by hashing given Data
-func NewIDFromBytes(data []byte) (ID, error) {
-	return crypto.UnmarshalEd25519PublicKey(data)
-}
-
-// IdFromString creates new ID by hashing given Data
-func NewIDFromString(data string) (ID, error) {
-	dec, err := hex.DecodeString(data)
-	if err != nil {
-		return nil, err
-	}
-	return crypto.UnmarshalPublicKey(dec)
-}
-
-// IdFromString creates new ID by hashing given Data
-func IdToString(id ID) (string, error) {
-	s, err := crypto.MarshalPublicKey(id)
-	if err != nil {
-		return "", err
-	}
-
-	return hex.EncodeToString(s), nil
-}
-
-// IdFromBytes creates new ID by hashing given Data
-func IdFromBytes(data []byte) (ID, error) {
-	return crypto.UnmarshalPublicKey(data)
-}
-
-// NewIDFromBytes creates new ID by hashing given Data
-func IdToBytes(id ID) ([]byte, error) {
-	data, err := crypto.MarshalPublicKey(id)
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}

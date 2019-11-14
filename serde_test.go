@@ -1,82 +1,60 @@
 package drive
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMarshalUnmarshalBinaryContract(t *testing.T) {
 	in := RandContract(t)
 
-	bytes, err := in.MarshalBinary()
-	if err != nil {
-		t.Fatal(err)
-	}
+	data, err := in.MarshalBinary()
+	require.Nil(t, err, err)
 
 	out := &Contract{}
-	err = out.UnmarshalBinary(bytes)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err = out.UnmarshalBinary(data)
+	require.Nil(t, err, err)
 
-	assert.Equal(t, in.Drive, out.Drive)
-	assert.Equal(t, in.Owner, out.Owner)
-	assert.Equal(t, in.State, out.State)
-	assert.Equal(t, in.Space, out.Space)
-	assert.Equal(t, in.Members, out.Members)
-	assert.Equal(t, in.Duration, out.Duration)
-	assert.Equal(t, in.Root, out.Root)
-	assert.Equal(t, in.MinReplicators, out.MinReplicators)
-	assert.Equal(t, in.PercentApprovers, out.PercentApprovers)
-	assert.Equal(t, in.BillingPrice, out.BillingPrice)
-	assert.Equal(t, in.BillingPeriod, out.BillingPeriod)
-
-	assert.Nil(t, out.PrivateKey)
+	assert.Equal(t, in, out)
 }
 
 func TestMarshalUnmarshalJSONContract(t *testing.T) {
 	in := RandContract(t)
 
-	bytes, err := in.MarshalJSON()
-	if err != nil {
-		t.Fatal(err)
-	}
+	data, err := in.MarshalJSON()
+	require.Nil(t, err, err)
 
 	out := &Contract{}
-	err = out.UnmarshalJSON(bytes)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err = out.UnmarshalJSON(data)
+	require.Nil(t, err, err)
 
-	assert.Equal(t, in.Drive, out.Drive)
-	assert.Equal(t, in.Owner, out.Owner)
-	assert.Equal(t, in.State, out.State)
-	assert.Equal(t, in.Space, out.Space)
-	assert.Equal(t, in.Members, out.Members)
-	assert.Equal(t, in.Duration, out.Duration)
-	assert.Equal(t, in.Root, out.Root)
-	assert.Equal(t, in.MinReplicators, out.MinReplicators)
-	assert.Equal(t, in.PercentApprovers, out.PercentApprovers)
-	assert.Equal(t, in.BillingPrice, out.BillingPrice)
-	assert.Equal(t, in.BillingPeriod, out.BillingPeriod)
+	assert.Equal(t, in, out)
 }
 
-func TestMarshalUnmarshalInvite(t *testing.T) {
+func TestMarshalUnmarshalBinaryInvite(t *testing.T) {
 	in := RandInvite(t)
 
-	bytes, err := MarshalInvite(in)
-	if err != nil {
-		t.Fatal(err)
-	}
+	data, err := in.MarshalBinary()
+	require.Nil(t, err, err)
 
-	out, err := UnmarshalInvite(bytes)
-	if err != nil {
-		t.Fatal(err)
-	}
+	out := &Invite{}
+	err = out.UnmarshalBinary(data)
+	require.Nil(t, err, err)
 
-	if !reflect.DeepEqual(in, out) {
-		t.Fatal("not equal")
-	}
+	assert.Equal(t, in, out)
+}
+
+func TestMarshalUnmarshalJSONInvite(t *testing.T) {
+	in := RandInvite(t)
+
+	data, err := in.MarshalJSON()
+	require.Nil(t, err, err)
+
+	out := &Invite{}
+	err = out.UnmarshalJSON(data)
+	require.Nil(t, err, err)
+
+	assert.Equal(t, in, out)
 }

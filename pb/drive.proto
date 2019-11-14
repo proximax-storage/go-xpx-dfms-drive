@@ -5,34 +5,26 @@ import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 message Contract {
     bytes drive = 1;
     bytes owner = 2;
-    repeated bytes members = 3;
-    int64 duration = 4;
-    int64 created = 5;
-    int64 space = 6;
-    bytes root = 7;
-    uint32 replicas = 8;
-    uint32 minReplicators = 9;
-    uint32 percentApprovers = 10;
-    int64 billingPrice = 11;
-    int64 billingPeriod = 12;
-    repeated ReplicatorInfo replicators = 13;
-}
-
-message ReplicatorInfo {
-    bytes pubKey = 1;
-    bytes info = 2;
+    repeated bytes replicators = 3;
+    bytes root = 4;
+    int64 duration = 5;
+    int64 billingPrice = 6;
+    int64 billingPeriod = 7;
+    int64 created = 8;
+    int64 space = 9;
+    uint32 payedReplicas = 10;
+    uint32 minReplicators = 11;
+    uint32 percentApprovers = 12;
 }
 
 message Invite {
     bytes drive = 1;
     bytes owner = 2;
     int64 duration = 3;
-    int64 space = 4;
-    int64 created = 5;
-    uint32 replicas = 6;
-    uint32 minReplicators = 7;
-    uint32 percentApprovers = 8;
-    int64 billingPrice = 9;
-    int64 billingPeriod = 10;
-    repeated bytes members = 11;
+    int64 billingPrice = 4;
+    int64 billingPeriod = 5;
+    int64 space = 6;
+    uint32 payedReplicas = 7;
+    uint32 minReplicators = 8;
+    uint32 percentApprovers = 9;
 }
