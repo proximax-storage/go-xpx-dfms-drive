@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/golang-lru v0.5.0 // indirect
 	github.com/ipfs/go-cid v0.0.3
 	github.com/libp2p/go-libp2p-core v0.2.4
-	github.com/multiformats/go-multihash v0.0.8
+	github.com/multiformats/go-multihash v0.0.10
 	github.com/proximax-storage/go-xpx-chain-sdk v0.5.1-0.20191030161647-1b1db9d1dbc9
 	github.com/stretchr/testify v1.4.0
 )
