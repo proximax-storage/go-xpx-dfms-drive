@@ -38,7 +38,7 @@ type Contract struct {
 	// It is used as an entry point to access DriveFS.
 	Root cid.Cid
 
-	// Created is a moment of time when the Contract was started
+	// Block height when the Contract was started.
 	Created int64
 
 	// Duration of the contract.
@@ -58,28 +58,12 @@ type Contract struct {
 	PrivateKey crypto.PrivKey // TODO Use Billet instead
 }
 
-func NewContractFromInvite(invite Invite, root cid.Cid, key crypto.PrivKey) *Contract {
-	return &Contract{
-		Drive:            invite.Drive,
-		Owner:            invite.Owner,
-		Duration:         invite.Duration,
-		Root:             root,
-		Space:            invite.Space,
-		PayedReplicas:    invite.PayedReplicas,
-		MinReplicators:   invite.MinReplicators,
-		PercentApprovers: invite.PercentApprovers,
-		BillingPeriod:    invite.BillingPeriod,
-		BillingPrice:     invite.BillingPrice,
-		PrivateKey:       key,
-	}
-}
-
 func (c *Contract) MarshalBinary() ([]byte, error) {
-	return MarshalContract(c)
+	return MarshalContractProto(c)
 }
 
 func (c *Contract) UnmarshalBinary(data []byte) error {
-	out, err := UnmarshalContract(data)
+	out, err := UnmarshalContractProto(data)
 	if err != nil {
 		return err
 	}

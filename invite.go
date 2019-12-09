@@ -4,8 +4,6 @@ import (
 	"github.com/libp2p/go-libp2p-core/crypto"
 )
 
-var NilInvite = Invite{}
-
 // Invite represents invitation for Replicators to join Drive Contract.
 type Invite struct {
 	Drive ID
@@ -23,11 +21,11 @@ type Invite struct {
 }
 
 func (in *Invite) MarshalBinary() ([]byte, error) {
-	return MarshalInvite(in)
+	return MarshalInviteProto(in)
 }
 
 func (in *Invite) UnmarshalBinary(data []byte) error {
-	out, err := UnmarshalInvite(data)
+	out, err := UnmarshalInviteProto(data)
 	if err != nil {
 		return err
 	}
