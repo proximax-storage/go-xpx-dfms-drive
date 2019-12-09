@@ -1,3 +1,6 @@
+// Generate
+// protoc -I=. -I=$GOPATH/src -I=$GOPATH/src/github.com/gogo/protobuf/protobuf --gofast_out=. *.proto
+
 syntax = "proto3";
 package drive_pb;
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
