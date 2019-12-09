@@ -58,22 +58,6 @@ type Contract struct {
 	PrivateKey crypto.PrivKey // TODO Use Billet instead
 }
 
-func NewContractFromInvite(invite Invite, root cid.Cid, key crypto.PrivKey) *Contract {
-	return &Contract{
-		Drive:            invite.Drive,
-		Owner:            invite.Owner,
-		Duration:         invite.Duration,
-		Root:             root,
-		Space:            invite.Space,
-		PayedReplicas:    invite.PayedReplicas,
-		MinReplicators:   invite.MinReplicators,
-		PercentApprovers: invite.PercentApprovers,
-		BillingPeriod:    invite.BillingPeriod,
-		BillingPrice:     invite.BillingPrice,
-		PrivateKey:       key,
-	}
-}
-
 func (c *Contract) MarshalBinary() ([]byte, error) {
 	return MarshalContractProto(c)
 }
