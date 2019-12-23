@@ -21,6 +21,12 @@ type Billet struct {
 	PrivateKey crypto.PrivKey
 }
 
+// UploadInfo for contract files
+type UploadInfo struct {
+	Participant  crypto.PubKey
+	UploadedSize int
+}
+
 // TODO Docs
 // TODO Still needs reconsideration about some fields.
 // Contract is an agreement between client and replicator peers on some amount of disk Space
