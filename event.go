@@ -7,7 +7,7 @@ const (
 	Pending
 	InProgress
 	Finished
-	AnyType
+	Any
 )
 
 func (e Event) Loggable() map[string]interface{} {
@@ -25,5 +25,5 @@ var eventNames = map[Event]string{
 	Pending:    "Pending",
 	InProgress: "InProgress",
 	Finished:   "Finished",
-	AnyType:    "AnyType",
+	Any:        "Any",
 }
