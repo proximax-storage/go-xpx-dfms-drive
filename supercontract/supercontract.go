@@ -23,12 +23,6 @@ type SuperContract struct {
 
 	// Supercontract file
 	File cid.Cid
-
-	// VM Functions list of Supercontract for Wasm VM 
-	VMFunctionsList []*Function
-
-	// Functions list of Supercontract
-	FunctionsList []string
 }
 
 type Function struct {
