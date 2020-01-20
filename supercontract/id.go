@@ -13,9 +13,9 @@ import (
 // Use NilID instead of "nil"
 var NilID = ID{}
 
-var ErrWrongID = errors.New("wrong drive.ID")
+var ErrWrongID = errors.New("wrong supercontract.ID")
 
-// ID represents identifier of the drive
+// ID represents identifier of the supercontract
 type ID cid.Cid
 
 func (id ID) CID() cid.Cid {
@@ -128,8 +128,8 @@ func IDToPubKey(id ID) (crypto.PubKey, error) {
 
 const (
 	// TODO Register in multicodec table: https://github.com/multiformats/multicodec/blob/master/table.csv
-	codec     = 0xC
-	codecName = "proximax-drive"
+	codec     = 0xD
+	codecName = "proximax-supercontract"
 )
 
 func init() {
