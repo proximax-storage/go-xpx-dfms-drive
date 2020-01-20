@@ -32,7 +32,7 @@ func (id ID) Equals(id2 ID) bool {
 
 func (id ID) Loggable() map[string]interface{} {
 	return map[string]interface{}{
-		"drive": id.String(),
+		"supercontract": id.String(),
 	}
 }
 
