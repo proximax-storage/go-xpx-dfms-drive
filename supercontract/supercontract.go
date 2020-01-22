@@ -23,6 +23,12 @@ type SuperContract struct {
 
 	// Supercontract file
 	File cid.Cid
+	
+	// Version of Wasm VM
+	VMVersion uint64
+	
+	// SuperContract functions
+	Functions []string
 }
 
 type Function struct {
