@@ -9,9 +9,14 @@ import (
 )
 
 func MarshalSuperContractProto(in *SuperContract) ([]byte, error) {
+	driveContract, err := drive.MarshalContractProto(in.Drive)
+	if err != nil {
+		return nil, err
+	}
+
 	out := &pb.SContract{
 		Id:        in.ID.Bytes(),
-		Drive:     in.Drive,
+		Drive:     driveContract,
 		File:      in.File.Bytes(),
 		Vmversion: in.VMVersion,
 		Functions: in.Functions,
@@ -28,12 +33,16 @@ func UnmarshalSuperContractProto(data []byte) (*SuperContract, error) {
 	}
 
 	out := &SuperContract{
-		Drive:     in.Drive,
 		VMVersion: in.Vmversion,
 		Functions: in.Functions,
 	}
 
 	out.ID, err = IDFromBytes(in.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	out.Drive, err = drive.UnmarshalContractProto(in.Drive)
 	if err != nil {
 		return nil, err
 	}
