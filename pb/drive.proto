@@ -31,3 +31,11 @@ message Invite {
     uint32 minReplicators = 8;
     uint32 percentApprovers = 9;
 }
+
+message SContract {
+    bytes id = 1;
+    drive_pb.Contract drive = 2;
+    bytes file = 3;
+    uint64 vmversion = 4;
+    repeated string functions = 5;
+}

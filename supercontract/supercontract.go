@@ -23,10 +23,10 @@ type SuperContract struct {
 
 	// Supercontract file
 	File cid.Cid
-	
+
 	// Version of Wasm VM
 	VMVersion uint64
-	
+
 	// SuperContract functions
 	Functions []string
 }
@@ -34,4 +34,32 @@ type SuperContract struct {
 type Function struct {
 	Name       string
 	Parameters []int64
+}
+
+func (c *SuperContract) MarshalBinary() ([]byte, error) {
+	return MarshalSuperContractProto(c)
+}
+
+func (c *SuperContract) UnmarshalBinary(data []byte) error {
+	out, err := UnmarshalSuperContractProto(data)
+	if err != nil {
+		return err
+	}
+
+	*c = *out
+	return nil
+}
+
+func (c *SuperContract) MarshalJSON() ([]byte, error) {
+	return MarshalSuperContractJSON(c)
+}
+
+func (c *SuperContract) UnmarshalJSON(data []byte) error {
+	out, err := UnmarshalSuperContractJSON(data)
+	if err != nil {
+		return err
+	}
+
+	*c = *out
+	return nil
 }
