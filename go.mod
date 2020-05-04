@@ -6,7 +6,7 @@ require (
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.3.2
 	github.com/ipfs/go-cid v0.0.4
-	github.com/libp2p/go-libp2p-core v0.3.0
+	github.com/libp2p/go-libp2p-core v0.5.3
 	github.com/multiformats/go-multihash v0.0.10
 	github.com/stretchr/testify v1.4.0
 )
