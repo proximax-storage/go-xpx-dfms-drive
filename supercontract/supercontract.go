@@ -14,6 +14,14 @@ const (
 	ExecutionFailure
 )
 
+type Status uint8
+
+const (
+	Active                   Status = 0
+	DeactivatedByParticipant        = 100
+	DeactivatedByDriveEnd           = 101
+)
+
 type SuperContract struct {
 	// Identifier of SuperContract
 	ID ID
@@ -29,6 +37,9 @@ type SuperContract struct {
 
 	// SuperContract functions
 	Functions []string
+
+	// SuperContract status
+	Status Status
 }
 
 type Function struct {

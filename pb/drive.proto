@@ -37,5 +37,6 @@ message SContract {
     bytes drive = 2;
     bytes file = 3;
     uint64 vmversion = 4;
-    repeated string functions = 5;
+    uint32 status = 5;
+    repeated string functions = 6;
 }

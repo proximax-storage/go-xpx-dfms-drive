@@ -20,6 +20,7 @@ func MarshalSuperContractProto(in *SuperContract) ([]byte, error) {
 		File:      in.File.Bytes(),
 		Vmversion: in.VMVersion,
 		Functions: in.Functions,
+		Status:    uint32(in.Status),
 	}
 
 	return out.Marshal()
@@ -51,6 +52,7 @@ func UnmarshalSuperContractProto(data []byte) (*SuperContract, error) {
 	if err != nil {
 		return nil, err
 	}
+	out.Status = Status(in.Status)
 
 	return out, nil
 }
@@ -62,6 +64,7 @@ func MarshalSuperContractJSON(in *SuperContract) ([]byte, error) {
 		File:      in.File.String(),
 		VMVersion: in.VMVersion,
 		Functions: in.Functions,
+		Status:    in.Status,
 	}
 
 	return json.Marshal(out)
@@ -78,6 +81,7 @@ func UnmarshalSuperContractJSON(data []byte) (*SuperContract, error) {
 		Drive:     in.Drive,
 		VMVersion: in.VMVersion,
 		Functions: in.Functions,
+		Status:    in.Status,
 	}
 
 	out.ID, err = IDFromString(in.Id)
@@ -98,5 +102,6 @@ type scContractJSON struct {
 	Drive     *drive.Contract `json:"drive"`
 	File      string          `json:"file"`
 	VMVersion uint64          `json:"vmversion"`
+	Status    Status          `json:"status"`
 	Functions []string        `json:"functions"`
 }

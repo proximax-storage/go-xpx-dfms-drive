@@ -1,14 +1,9 @@
 package supercontract
 
 import (
-	"crypto/rand"
-	"github.com/ipfs/go-cid"
-	"github.com/multiformats/go-multihash"
 	drive "github.com/proximax-storage/go-xpx-dfms-drive"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
-	"io/ioutil"
 	"testing"
 )
 
@@ -40,28 +35,11 @@ func TestMarshalUnmarshalJSONSuperContract(t *testing.T) {
 
 func randSuperContract(t *testing.T) *SuperContract {
 	return &SuperContract{
-		ID:        randID(t),
+		ID:        RandID(t),
 		Drive:     drive.RandContract(t),
 		File:      randCID(t),
 		VMVersion: 3,
 		Functions: []string{"main"},
+		Status:    DeactivatedByDriveEnd,
 	}
-}
-
-func randID(t *testing.T) ID {
-	return ID(randCID(t))
-}
-
-func randCID(t *testing.T) cid.Cid {
-	b, err := ioutil.ReadAll(io.LimitReader(rand.Reader, 256))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	hash, err := multihash.Sum(b, multihash.SHA2_256, -1)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	return cid.NewCidV1(codec, hash)
 }
