@@ -8,5 +8,5 @@ require (
 	github.com/ipfs/go-cid v0.0.6
 	github.com/libp2p/go-libp2p-core v0.6.0
 	github.com/multiformats/go-multihash v0.0.13
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 )
